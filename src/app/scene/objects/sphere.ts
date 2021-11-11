@@ -1,14 +1,14 @@
 import { SceneObject } from ".";
 import { QuadraticEquation } from "../../equations";
 import { Line3d, Point3d } from "../../geometry";
-import { Intercection } from "../../renderer/intercection";
+import { Intersection } from "../../renderer/intersection";
 import { SphereProperties } from "../object-properties";
 
 export class Sphere implements SceneObject {
 
   constructor(public properties: SphereProperties) { }
 
-  getIntercections(ray: Line3d): Intercection[] {
+  getIntersections(ray: Line3d): Intersection[] {
     const p1 = ray.point1, p2 = ray.point2, v = p2.subtract(p1), o = this.properties.position, r = this.properties.radius;
     const x0 = o.x, y0 = o.y, z0 = o.z, x1 = p1.x, y1 = p1.y, z1 = p1.z;
 
@@ -21,7 +21,7 @@ export class Sphere implements SceneObject {
 
     return solutions.map(solution => {
       const point = new Point3d(x1 + v.x * solution, y1 + v.y * solution, z1 + v.z * solution);
-      return new Intercection(this.properties.material, point, new Line3d(ray.point1, point).getLength());
+      return new Intersection(this.properties.material, point, new Line3d(ray.point1, point).getLength());
     });
   }
 }

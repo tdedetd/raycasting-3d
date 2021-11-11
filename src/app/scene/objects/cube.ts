@@ -2,7 +2,7 @@ import { Mesh } from "../mesh";
 import { Line3d, Point3d, PointSpherical, Triangle3d } from "../../geometry";
 import { CubeProperties } from "../object-properties";
 import { SceneObject } from ".";
-import { MeshIntercectionDetector } from "../mesh-intercection-detector";
+import { MeshIntersectionDetector } from "../mesh-intersection-detector";
 
 const V_ANGLE = Math.atan(1 / Math.sqrt(2)) * 180 / Math.PI;
 
@@ -14,8 +14,8 @@ export class Cube implements SceneObject {
     this.meshes = this.getMeshes();
   }
 
-  getIntercections(ray: Line3d) {
-    return MeshIntercectionDetector.getIntercections(ray, this.meshes);
+  getIntersections(ray: Line3d) {
+    return MeshIntersectionDetector.getIntersections(ray, this.meshes);
   }
 
   private getMeshes(): Mesh[] {
