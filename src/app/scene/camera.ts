@@ -26,15 +26,16 @@ export class Camera {
   private rotator: Rotator;
 
   /** The first point is always position of camera */
-  public generateRay(x: number, y: number): Line3d {
+  generateRay(x: number, y: number): Line3d {
 
     const coordY = (this.canvasPixelSize * x + this.canvasPixelSize / 2) - this.canvasWidth / 2;
-    const coordZ = (this.canvasPixelSize * (this.resolution.height - y) + this.canvasPixelSize / 2) - this.canvasHeight / 2;
+    const coordZ = (this.canvasPixelSize * (this.resolution.height - y - 1) + this.canvasPixelSize / 2) - this.canvasHeight / 2;
+    const rotatedPoint = this.rotator.rotatePoint(this.rotation, new Point3d(this.canvasCoordX, coordY, coordZ));
 
-    return new Line3d(this.position, this.rotator.rotatePoint(this.rotation, new Point3d(this.canvasCoordX, coordY, coordZ)));
+    return new Line3d(this.position, rotatedPoint);
   }
 
-  public updateCanvasConfig() {
+  updateCanvasConfig() {
     this.canvasWidth = 2 * this.distance * Math.tan(this.fov / 2 * Math.PI / 180);
     this.canvasPixelSize = this.canvasWidth / this.resolution.width;
     this.canvasHeight = this.canvasPixelSize * this.resolution.height;
