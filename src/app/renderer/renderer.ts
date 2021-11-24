@@ -2,7 +2,7 @@ import { Line3d } from "../geometry";
 import { Resolution } from "../misc/resolution";
 import { Camera, Scene } from "../scene";
 import { Screen } from './screen';
-import { Intercection } from './intercection';
+import { Intersection } from './intersection';
 
 export class Renderer {
 
@@ -38,20 +38,20 @@ export class Renderer {
   }
 
   private getColor(ray: Line3d) {
-    let closestIntercection: Intercection = null;
+    let closestIntersection: Intersection = null;
 
     this.scene.getObjects().forEach(obj => {
-      const intercections = obj.getIntercections(ray);
-      intercections.forEach(intercection => {
-        if (!closestIntercection || intercection.distance < closestIntercection.distance) {
-          closestIntercection = intercection;
+      const intersections = obj.getIntersections(ray);
+      intersections.forEach(intersection => {
+        if (!closestIntersection || intersection.distance < closestIntersection.distance) {
+          closestIntersection = intersection;
         }
       });
     });
 
-    if (!closestIntercection) return this.scene.backgroundColor;
+    if (!closestIntersection) return this.scene.backgroundColor;
 
-    const color = closestIntercection.material.color;
-    return color.mix(this.scene.backgroundColor, closestIntercection.distance / this.camera.distance);
+    const color = closestIntersection.material.color;
+    return color.mix(this.scene.backgroundColor, closestIntersection.distance / this.camera.distance);
   }
 }

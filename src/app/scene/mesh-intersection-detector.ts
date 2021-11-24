@@ -1,32 +1,32 @@
 import { Mesh } from ".";
 import { SystemOfLinearEquations3eq3Var } from "../equations";
 import { Line3d, Point3d } from "../geometry";
-import { Intercection } from "../renderer/intercection";
+import { Intersection } from "../renderer/intersection";
 
-export class MeshIntercectionDetector {
+export class MeshIntersectionDetector {
 
-  public static getIntercections(ray: Line3d, meshes: Mesh[]): Intercection[] {
+  public static getIntersections(ray: Line3d, meshes: Mesh[]): Intersection[] {
 
-    const intercections: Intercection[] = [];
+    const intersections: Intersection[] = [];
 
     meshes.forEach(mesh => {
       const equationSystem = new SystemOfLinearEquations3eq3Var([
         ...ray.getEquations(), mesh.triangle.getPlaneEquation()
       ]);
 
-      const point = MeshIntercectionDetector.getIntercectionPoint(equationSystem);
+      const point = MeshIntersectionDetector.getIntersectionPoint(equationSystem);
       if (!point || !mesh.triangle.pointInside(point)) return;
 
       const inInterval = point.x > ray.point1.x && point.x < ray.point2.x || point.x > ray.point2.x && point.x < ray.point1.x;
       if (!inInterval) return;
 
-      intercections.push(new Intercection(mesh.material, point, new Line3d(point, ray.point1).getLength()));
+      intersections.push(new Intersection(mesh.material, point, new Line3d(point, ray.point1).getLength()));
     });
 
-    return intercections;
+    return intersections;
   }
 
-  private static getIntercectionPoint(equationSystem: SystemOfLinearEquations3eq3Var): Point3d {
+  private static getIntersectionPoint(equationSystem: SystemOfLinearEquations3eq3Var): Point3d {
     const solution = equationSystem.getSolution();
     if (!solution) return null;
     return new Point3d(solution[0], solution[1], solution[2]);
