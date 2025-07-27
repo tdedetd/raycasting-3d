@@ -14,12 +14,12 @@ export function init(renderer: Renderer) {
     position: {
       x: <HTMLInputElement>byId('input-position-x'),
       y: <HTMLInputElement>byId('input-position-y'),
-      z: <HTMLInputElement>byId('input-position-z')
+      z: <HTMLInputElement>byId('input-position-z'),
     },
     rotation: {
       x: <HTMLInputElement>byId('input-rotation-x'),
       y: <HTMLInputElement>byId('input-rotation-y'),
-      z: <HTMLInputElement>byId('input-rotation-z')
+      z: <HTMLInputElement>byId('input-rotation-z'),
     },
     fov: <HTMLInputElement>byId('input-fov'),
     distance: <HTMLInputElement>byId('input-distance'),

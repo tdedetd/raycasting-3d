@@ -11,3 +11,5 @@
 !.vscode/*.code-snippets
 
 .idea/
+
+/chache/

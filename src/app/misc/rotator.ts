@@ -15,7 +15,7 @@ export class Rotator {
     const xRad = rotation.x * Math.PI / 180;
     const yRad = rotation.y * Math.PI / 180;
     const zRad = rotation.z * Math.PI / 180;
-    const point0 = point.subtract(this.pivot);
+    const point0 = point.subtract(this.pivot ?? new Point3d(0, 0, 0));
 
     const rotationMatrixX = new Matrix([
       [1, 0, 0],
@@ -42,7 +42,7 @@ export class Rotator {
     const y1 = coordsRotatedXYZ.values[1][0];
     const z1 = coordsRotatedXYZ.values[2][0];
 
-    return new Point3d(x1, y1, z1).add(this.pivot);
+    return new Point3d(x1, y1, z1).add(this.pivot ?? new Point3d(0, 0, 0));
   }
 
   /**

@@ -40,7 +40,7 @@ export class Screen {
   }
 
   private getCanvasElement(id: string): HTMLCanvasElement {
-    const canvasEl = document.querySelector<HTMLCanvasElement>(id);
+    const canvasEl = document.querySelector<HTMLCanvasElement>(`#${id}`);
     if (canvasEl) {
       return canvasEl;
     } else {

@@ -67,7 +67,8 @@ export class SystemOfLinearEquations3eq3Var extends SystemOfLinearEquations {
     return [x, y, z];
   }
 
-  private getSolutionByCramersRule(): number[] {
+  /** @deprecated */
+  private getSolutionByCramersRule(): number[] | null {
 
     const v = this.equations.map(eq => eq.coefficients);
     const matrix = new Matrix3x3(v);

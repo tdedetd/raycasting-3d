@@ -4,27 +4,43 @@ import { Resolution } from '../misc/resolution';
 import { Rotator } from '../misc/rotator';
 import { Rotation } from './rotation';
 
-export class Camera {
+interface CameraOptions {
+  position: Point3d;
+  rotation?: Rotation;
+  fov?: number;
+  distance?: number;
+  resolution: Resolution;
+}
 
-  public position: Point3d = new Point3d(0, 0, 0);
-  public rotation: Rotation = new Rotation(0, 0, 0);
-  public fov: number = 90;
-  public distance: number = 100;
-  public resolution: Resolution = new Resolution(320, 240);
+export class Camera {
+  public position: Point3d;
+  public rotation: Rotation;
+  public fov: number;
+  public distance: number;
+  public resolution: Resolution;
 
   /** Global width of canvas on scene */
-  private canvasWidth: number;
+  private canvasWidth = 0;
 
   /** Global height of canvas on scene */
-  private canvasHeight: number;
+  private canvasHeight = 0;
 
   /** Global size of 1 pixel on scene */
-  private canvasPixelSize: number;
+  private canvasPixelSize = 0;
 
   /** Global X when camera has no rotation */
-  private canvasCoordX: number;
+  private canvasCoordX = 0;
 
-  private rotator: Rotator;
+  private rotator = new Rotator();
+
+  constructor({ position, rotation, fov, distance, resolution }: CameraOptions) {
+    this.position = position;
+    this.rotation = rotation ?? new Rotation(0, 0, 0);
+    this.fov = fov ?? 90;
+    this.distance = distance ?? 100;
+    this.resolution = resolution;
+    this.updateCanvasConfig(position);
+  }
 
   /** The first point is always position of camera */
   generateRay(x: number, y: number): Line3d {
@@ -36,11 +52,11 @@ export class Camera {
     return new Line3d(this.position, rotatedPoint);
   }
 
-  updateCanvasConfig() {
+  updateCanvasConfig(position?: Point3d) {
     this.canvasWidth = 2 * this.distance * Math.tan(this.fov / 2 * Math.PI / 180);
     this.canvasPixelSize = this.canvasWidth / this.resolution.width;
     this.canvasHeight = this.canvasPixelSize * this.resolution.height;
     this.canvasCoordX = this.position.x + this.distance;
-    this.rotator = new Rotator(this.position);
+    this.rotator = new Rotator(position ?? this.position);
   }
 }

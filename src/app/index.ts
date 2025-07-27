@@ -9,13 +9,14 @@ import { Rotation } from './scene/rotation';
 import { Scene } from './scene/scene';
 import { uiUtils } from './utils/index';
 
-const ROTATION = new Rotation(0, 0, 0);
+// TODO: default rotation in constructor
+const DEFAULT_ROTATION = new Rotation(0, 0, 0);
 
 const scene = new Scene();
 scene.addObjects(
   new Cube({
     position: new Point3d(0, 0, 2.5),
-    rotation: ROTATION,
+    rotation: DEFAULT_ROTATION,
     material: {
       color: new Color(64, 64, 255)
     },
@@ -23,7 +24,7 @@ scene.addObjects(
   }),
   new Cube({
     position: new Point3d(-2, 4, 1.5),
-    rotation: ROTATION,
+    rotation: DEFAULT_ROTATION,
     material: {
       color: new Color(255, 0, 0)
     },
@@ -31,7 +32,7 @@ scene.addObjects(
   }),
   new Cube({
     position: new Point3d(0, 0, -50),
-    rotation: ROTATION,
+    rotation: DEFAULT_ROTATION,
     material: {
       color: new Color(255, 255, 128)
     },
@@ -43,15 +44,16 @@ scene.addObjects(
     },
     position: new Point3d(5, -7, 2),
     radius: 5,
-    rotation: ROTATION,
+    rotation: DEFAULT_ROTATION,
   }),
 );
 
-const camera = new Camera();
-camera.position = new Point3d(-7, -5, 6);
-camera.rotation = new Rotation(0, 11, 17);
-camera.distance = 17;
-camera.resolution = new Resolution(160, 120);
-camera.fov = 90;
+const camera = new Camera({
+  position: new Point3d(-7, -5, 6),
+  rotation: new Rotation(0, 11, 17),
+  distance: 17,
+  resolution: new Resolution(160, 120),
+  fov: 90,
+});
 
 uiUtils.init(new Renderer(scene, 'canvas', camera));

@@ -9,17 +9,15 @@ import { Color } from "./color";
 import { Screen } from "./screen";
 
 export class AxesRenderer {
-
   private rotator: Rotator;
   private screen: Screen;
 
-  constructor(private readonly canvasId: string) {
+  constructor(canvasId: string) {
     this.rotator = new Rotator();
-    this.screen = new Screen(this.canvasId, new Resolution(320, 240), 'transparent');
+    this.screen = new Screen(canvasId, new Resolution(320, 240), 'transparent');
   }
 
   public render(camera: Camera) {
-
     const cameraPosition = new Point3d(-2, 0, 0);
     const vfov = this.getVerticalFov(camera);
 
