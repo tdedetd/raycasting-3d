@@ -1,8 +1,11 @@
+import { Line3d } from '../../geometry/line-3d';
+import { Point3d } from '../../geometry/point-3d';
+import { PointSpherical } from '../../geometry/point-spherical';
+import { Triangle3d } from '../../geometry/triangle-3d';
 import { Mesh } from "../mesh";
-import { Line3d, Point3d, PointSpherical, Triangle3d } from "../../geometry";
-import { CubeProperties } from "../object-properties";
-import { SceneObject } from ".";
 import { MeshIntersectionDetector } from "../mesh-intersection-detector";
+import { CubeProperties } from '../object-properties/cube-properties';
+import { SceneObject } from './scene-object';
 
 const V_ANGLE = Math.atan(1 / Math.sqrt(2)) * 180 / Math.PI;
 

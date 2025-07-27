@@ -1,6 +1,10 @@
-import { Point, Point3d, Vector } from "../geometry";
-import { Resolution, Rotator } from "../misc";
-import { Camera, Rotation } from "../scene";
+import { Point } from '../geometry/point';
+import { Point3d } from '../geometry/point-3d';
+import { Vector } from '../geometry/vector-3d';
+import { Resolution } from '../misc/resolution';
+import { Rotator } from '../misc/rotator';
+import { Camera } from '../scene/camera';
+import { Rotation } from '../scene/rotation';
 import { Color } from "./color";
 import { Screen } from "./screen";
 

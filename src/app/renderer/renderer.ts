@@ -1,8 +1,9 @@
-import { Line3d } from "../geometry";
 import { Resolution } from "../misc/resolution";
-import { Camera, Scene } from "../scene";
 import { Screen } from './screen';
 import { Intersection } from './intersection';
+import { Scene } from '../scene/scene';
+import { Camera } from '../scene/camera';
+import { Line3d } from '../geometry/line-3d';
 
 export class Renderer {
 
@@ -49,7 +50,9 @@ export class Renderer {
       });
     });
 
-    if (!closestIntersection) return this.scene.backgroundColor;
+    if (!closestIntersection) {
+      return this.scene.backgroundColor;
+    }
 
     const color = closestIntersection.material.color;
     return color.mix(this.scene.backgroundColor, closestIntersection.distance / this.camera.distance);

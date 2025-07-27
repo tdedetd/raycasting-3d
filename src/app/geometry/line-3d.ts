@@ -1,4 +1,4 @@
-import { LinearEquation } from '../equations';
+import { LinearEquation } from '../equations/linear-equation';
 import { Point3d } from './point-3d';
 import { Triangle3d } from './triangle-3d';
 

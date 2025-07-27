@@ -1,4 +1,4 @@
-import { Triangle3d } from "../geometry";
+import { Triangle3d } from '../geometry/triangle-3d';
 import { Material } from "./material";
 
 export class Mesh {

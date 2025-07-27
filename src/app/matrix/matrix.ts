@@ -1,8 +1,8 @@
-import { MatrixError, MatrixOperationError } from '../errors';
-import { listUtils } from '../utils';
+import { MatrixError } from '../errors/matrix-error';
+import { MatrixOperationError } from '../errors/matrix-operation-error';
+import { listUtils } from '../utils/index';
 
 export class Matrix {
-
   public columns: number;
   public rows: number;
   public readonly values: number[][];
@@ -10,7 +10,10 @@ export class Matrix {
   constructor(values: number[][]) {
     if (!values) throw new MatrixError('Matrix is empty');
     this.values = values;
-    this.calculateSize();
+
+    const size = this.calculateSize();
+    this.columns = size.columns;
+    this.rows = size.rows;
   }
 
   public add(matrix: Matrix): Matrix {
@@ -46,9 +49,12 @@ export class Matrix {
     throw new MatrixError(`Matrix must be ${rows} rows and ${columns} columns. Now is ${this.rows}x${this.columns}`);
   }
 
-  private calculateSize() {
-    this.rows = this.values.length;
-    if (this.rows === 0) throw new MatrixError('There are no rows in matrix');
+  private calculateSize(): { rows: number, columns: number } {
+    let rows = 0;
+    let columns = 0;
+
+    rows = this.values.length;
+    if (rows === 0) throw new MatrixError('There are no rows in matrix');
 
     const lengthsOfRows = this.values.map(row => row.length);
 
@@ -57,7 +63,9 @@ export class Matrix {
     }
 
     if (this.values[0].length === 0) throw new MatrixError('There are no columns in matrix');
-    this.columns = this.values[0].length;
+    columns = this.values[0].length;
+
+    return { rows, columns };
   }
 
   private multiplyByNumber(multiplier: number): Matrix {

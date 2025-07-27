@@ -1,7 +1,8 @@
-import { Mesh } from ".";
-import { SystemOfLinearEquations3eq3Var } from "../equations";
-import { Line3d, Point3d } from "../geometry";
+import { SystemOfLinearEquations3eq3Var } from '../equations/system-of-linear-equations-3eq-3var';
+import { Line3d } from '../geometry/line-3d';
+import { Point3d } from '../geometry/point-3d';
 import { Intersection } from "../renderer/intersection";
+import { Mesh } from './mesh';
 
 export class MeshIntersectionDetector {
 

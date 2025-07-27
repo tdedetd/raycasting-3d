@@ -1,8 +1,9 @@
-import { SceneObject } from ".";
-import { QuadraticEquation } from "../../equations";
-import { Line3d, Point3d } from "../../geometry";
+import { QuadraticEquation } from '../../equations/quadratic-equation';
+import { Line3d } from '../../geometry/line-3d';
+import { Point3d } from '../../geometry/point-3d';
 import { Intersection } from "../../renderer/intersection";
-import { SphereProperties } from "../object-properties";
+import { SphereProperties } from '../object-properties/sphere-properties';
+import { SceneObject } from './scene-object';
 
 export class Sphere implements SceneObject {
 
@@ -19,7 +20,7 @@ export class Sphere implements SceneObject {
     const solutions = new QuadraticEquation(a, b, c).solve();
     if (!solutions) return [];
 
-    return solutions.map(solution => {
+    return solutions.map((solution) => {
       const point = new Point3d(x1 + v.x * solution, y1 + v.y * solution, z1 + v.z * solution);
       return new Intersection(this.properties.material, point, new Line3d(ray.point1, point).getLength());
     });

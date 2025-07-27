@@ -1,4 +1,4 @@
-import { Point3d } from "../../geometry";
+import { Point3d } from '../../geometry/point-3d';
 import { Material } from "../material";
 import { Rotation } from "../rotation";
 

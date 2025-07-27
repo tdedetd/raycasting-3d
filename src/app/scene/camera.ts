@@ -1,6 +1,7 @@
-import { Line3d, Point3d } from '../geometry';
-import { Rotator } from '../misc';
+import { Line3d } from '../geometry/line-3d';
+import { Point3d } from '../geometry/point-3d';
 import { Resolution } from '../misc/resolution';
+import { Rotator } from '../misc/rotator';
 import { Rotation } from './rotation';
 
 export class Camera {

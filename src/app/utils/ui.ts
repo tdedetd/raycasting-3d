@@ -1,7 +1,8 @@
-import { AxesRenderer, Renderer } from '../renderer';
-import { Point3d } from '../geometry';
+import { Renderer } from '../renderer/renderer';
+import { AxesRenderer } from '../renderer/axes-renderer';
 import { Rotation } from '../scene/rotation';
 import { Resolution } from '../misc/resolution';
+import { Point3d } from '../geometry/point-3d';
 
 // TODO: to object
 export function init(renderer: Renderer) {
@@ -42,7 +43,7 @@ export function init(renderer: Renderer) {
   form.resolution.width.value = String(camera.resolution.width);
   form.resolution.height.value = String(camera.resolution.height);
 
-  button.addEventListener('click', () => {
+  button?.addEventListener('click', () => {
     camera.position = new Point3d(+form.position.x.value, +form.position.y.value, +form.position.z.value);
     camera.rotation = new Rotation(+form.rotation.x.value, +form.rotation.y.value, +form.rotation.z.value);
     camera.fov = +form.fov.value;

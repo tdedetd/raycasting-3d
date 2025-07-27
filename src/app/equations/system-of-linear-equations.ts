@@ -1,7 +1,7 @@
+import { EquationError } from '../errors/equation-error';
+import { SquareMatrix } from '../matrix/square-matrix';
+import { listUtils } from '../utils/index';
 import { LinearEquation } from './linear-equation';
-import { listUtils } from '../utils';
-import { EquationError } from '../errors';
-import { SquareMatrix } from '../matrix';
 
 export class SystemOfLinearEquations {
 

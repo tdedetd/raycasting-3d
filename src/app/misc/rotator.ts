@@ -1,6 +1,6 @@
-import { Point3d } from "../geometry";
-import { Matrix } from "../matrix";
-import { Rotation } from "../scene";
+import { Point3d } from '../geometry/point-3d';
+import { Matrix } from '../matrix/matrix';
+import { Rotation } from '../scene/rotation';
 
 export class Rotator {
 

@@ -1,5 +1,5 @@
-import { Point } from '../geometry';
-import { RendererError } from '../errors';
+import { RendererError } from '../errors/renderer-error';
+import { Point } from '../geometry/point';
 import { Resolution } from '../misc/resolution';
 import { Color } from './color';
 

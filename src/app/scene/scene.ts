@@ -1,5 +1,5 @@
-import { SceneObject } from "./objects";
-import { Color } from "../renderer";
+import { Color } from '../renderer/color';
+import { SceneObject } from './objects/scene-object';
 
 export class Scene {
 

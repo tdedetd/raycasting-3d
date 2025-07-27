@@ -1,5 +1,5 @@
-import { EquationError } from '../errors';
-import { Matrix3x3 } from '../matrix';
+import { EquationError } from '../errors/equation-error';
+import { Matrix3x3 } from '../matrix/matrix3x3';
 import { LinearEquation } from './linear-equation';
 import { SystemOfLinearEquations } from './system-of-linear-equations';
 

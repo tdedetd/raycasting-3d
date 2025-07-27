@@ -1,5 +1,5 @@
-import { Point3d } from "../geometry";
-import { Material } from "../scene";
+import { Point3d } from '../geometry/point-3d';
+import { Material } from '../scene/material';
 
 export class Intersection {
 

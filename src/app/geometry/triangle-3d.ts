@@ -1,5 +1,5 @@
+import { LinearEquation } from '../equations/linear-equation';
 import { Point3d } from "./point-3d";
-import { LinearEquation } from '../equations';
 import { Vector } from "./vector-3d";
 
 export class Triangle3d {

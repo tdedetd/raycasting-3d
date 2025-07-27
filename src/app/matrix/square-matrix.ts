@@ -1,5 +1,5 @@
+import { MatrixError } from '../errors/matrix-error';
 import { Matrix } from './matrix';
-import { MatrixError } from '../errors';
 
 export class SquareMatrix extends Matrix {
 
