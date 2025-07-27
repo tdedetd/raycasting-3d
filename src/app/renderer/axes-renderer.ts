@@ -1,10 +1,9 @@
-import { Point } from '../geometry/point';
+import { Point } from '../models/point.model';
 import { Point3d } from '../geometry/point-3d';
 import { Vector } from '../geometry/vector-3d';
-import { Resolution } from '../misc/resolution';
-import { Rotator } from '../misc/rotator';
+import { Rotator } from './rotator';
 import { Camera } from '../scene/camera';
-import { Rotation } from '../scene/rotation';
+import { Rotation } from '../models/rotation.model';
 import { Color } from "./color";
 import { Screen } from "./screen";
 
@@ -14,7 +13,7 @@ export class AxesRenderer {
 
   constructor(canvasId: string) {
     this.rotator = new Rotator();
-    this.screen = new Screen(canvasId, new Resolution(320, 240), 'transparent');
+    this.screen = new Screen(canvasId, { width: 320, height: 240 }, 'transparent');
   }
 
   public render(camera: Camera) {
@@ -22,7 +21,11 @@ export class AxesRenderer {
     const vfov = this.getVerticalFov(camera);
 
     const camDirPoint = new Point3d(0, 0, 0).subtract(cameraPosition);
-    const inverseRotation = new Rotation(-camera.rotation.x, -camera.rotation.y, -camera.rotation.z);
+    const inverseRotation: Rotation = {
+      x: -camera.rotation.x,
+      y: -camera.rotation.y,
+      z: -camera.rotation.z,
+    };
     const xAxisEnd = this.rotator.rotatePoint(inverseRotation, new Point3d(1, 0, 0)).subtract(cameraPosition);
     const yAxisEnd = this.rotator.rotatePoint(inverseRotation, new Point3d(0, 1, 0)).subtract(cameraPosition);
     const zAsisEnd = this.rotator.rotatePoint(inverseRotation, new Point3d(0, 0, 1)).subtract(cameraPosition);
@@ -31,7 +34,7 @@ export class AxesRenderer {
     const yScreenEnd = this.getAxisEndScreenPoint(camDirPoint, yAxisEnd, camera.fov, vfov);
     const zScreenEnd = this.getAxisEndScreenPoint(camDirPoint, zAsisEnd, camera.fov, vfov);
 
-    const centralPoint = new Point(this.screen.resolution.width / 2, this.screen.resolution.height / 2);
+    const centralPoint: Point = { x: this.screen.resolution.width / 2, y: this.screen.resolution.height / 2 };
 
     const shadowColor = new Color(0, 0, 0);
     this.screen.clear();
@@ -63,7 +66,7 @@ export class AxesRenderer {
     //   `\nx`, x, 'y', y
     // );
 
-    return new Point(x, y);
+    return { x, y };
   }
 
   private getVerticalFov(camera: Camera): number {

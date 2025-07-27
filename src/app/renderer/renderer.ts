@@ -1,11 +1,10 @@
-import { Resolution } from "../misc/resolution";
+import { Resolution } from "../models/resolution.model";
 import { Screen } from './screen';
-import { Intersection } from './intersection';
+import { Intersection } from '../models/intersection.model';
 import { Scene } from '../scene/scene';
 import { Camera } from '../scene/camera';
-import { Line3d } from '../geometry/line-3d';
 import { Counters } from '../debug/counters';
-import { CameraRay } from '../scene/camera-ray';
+import { CameraRay } from '../models/camera-ray.model';
 
 export class Renderer {
   constructor(

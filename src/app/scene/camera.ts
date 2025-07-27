@@ -1,11 +1,11 @@
-import { Line3d } from '../geometry/line-3d';
+import { Line3d } from '../models/line-3d.models';
 import { Point3d } from '../geometry/point-3d';
-import { Resolution } from '../misc/resolution';
-import { Rotator } from '../misc/rotator';
+import { Resolution } from '../models/resolution.model';
+import { Rotator } from '../renderer/rotator';
 import { getEquations } from '../utils/get-equations';
 import { getLength } from '../utils/get-length';
-import { CameraRay } from './camera-ray';
-import { Rotation } from './rotation';
+import { CameraRay } from '../models/camera-ray.model';
+import { Rotation } from '../models/rotation.model';
 
 interface CameraOptions {
   position: Point3d;
@@ -38,7 +38,7 @@ export class Camera {
 
   constructor({ position, rotation, fov, distance, resolution }: CameraOptions) {
     this.position = position;
-    this.rotation = rotation ?? new Rotation(0, 0, 0);
+    this.rotation = rotation ?? { x: 0, y: 0, z: 0 };
     this.fov = fov ?? 90;
     this.distance = distance ?? 100;
     this.resolution = resolution;

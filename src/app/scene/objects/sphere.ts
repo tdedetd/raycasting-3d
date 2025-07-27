@@ -1,8 +1,8 @@
 import { Point3d } from '../../geometry/point-3d';
-import { Intersection } from "../../renderer/intersection";
+import { Intersection } from "../../models/intersection.model";
 import { getLength } from '../../utils/get-length';
 import { solveQuadraticEquation } from '../../utils/solve-quadratic-equation';
-import { CameraRay } from '../camera-ray';
+import { CameraRay } from '../../models/camera-ray.model';
 import { SphereProperties } from '../object-properties/sphere-properties';
 import { SceneObject } from './scene-object';
 

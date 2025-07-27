@@ -1,4 +1,4 @@
-import { Point3d } from './point-3d';
+import { Point3d } from '../geometry/point-3d';
 
 export interface Line3d {
   point1: Point3d;

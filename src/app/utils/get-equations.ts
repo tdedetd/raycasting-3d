@@ -1,5 +1,5 @@
 import { LinearEquation } from '../equations/linear-equation';
-import { Line3d } from '../geometry/line-3d';
+import { Line3d } from '../models/line-3d.models';
 import { Point3d } from '../geometry/point-3d';
 import { Triangle3d } from '../geometry/triangle-3d';
 

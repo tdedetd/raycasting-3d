@@ -1,8 +1,8 @@
 import { SystemOfLinearEquations3eq3Var } from '../equations/system-of-linear-equations-3eq-3var';
 import { Point3d } from '../geometry/point-3d';
-import { Intersection } from "../renderer/intersection";
+import { Intersection } from "../models/intersection.model";
 import { getLength } from '../utils/get-length';
-import { CameraRay } from './camera-ray';
+import { CameraRay } from '../models/camera-ray.model';
 import { Mesh } from './mesh';
 
 export class MeshIntersectionDetector {

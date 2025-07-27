@@ -1,6 +1,6 @@
 import { RendererError } from '../errors/renderer-error';
-import { Point } from '../geometry/point';
-import { Resolution } from '../misc/resolution';
+import { Point } from '../models/point.model';
+import { Resolution } from '../models/resolution.model';
 import { Color } from './color';
 
 export class Screen {

@@ -1,8 +1,7 @@
-import { Line3d } from '../../geometry/line-3d';
 import { Point3d } from '../../geometry/point-3d';
 import { PointSpherical } from '../../geometry/point-spherical';
 import { Triangle3d } from '../../geometry/triangle-3d';
-import { CameraRay } from '../camera-ray';
+import { CameraRay } from '../../models/camera-ray.model';
 import { Mesh } from "../mesh";
 import { MeshIntersectionDetector } from "../mesh-intersection-detector";
 import { CubeProperties } from '../object-properties/cube-properties';

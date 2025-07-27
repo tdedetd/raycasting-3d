@@ -1,6 +1,6 @@
 import { Point3d } from '../../geometry/point-3d';
-import { Material } from "../material";
-import { Rotation } from "../rotation";
+import { Material } from "../../models/material.model";
+import { Rotation } from "../../models/rotation.model";
 
 export interface ObjectProperties {
   position: Point3d;

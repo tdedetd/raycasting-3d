@@ -1,7 +1,5 @@
 import { Renderer } from '../renderer/renderer';
 import { AxesRenderer } from '../renderer/axes-renderer';
-import { Rotation } from '../scene/rotation';
-import { Resolution } from '../misc/resolution';
 import { Point3d } from '../geometry/point-3d';
 
 // TODO: to object
@@ -45,10 +43,17 @@ export function init(renderer: Renderer) {
 
   button?.addEventListener('click', () => {
     camera.position = new Point3d(+form.position.x.value, +form.position.y.value, +form.position.z.value);
-    camera.rotation = new Rotation(+form.rotation.x.value, +form.rotation.y.value, +form.rotation.z.value);
+    camera.rotation = {
+      x: +form.rotation.x.value,
+      y: +form.rotation.y.value,
+      z: +form.rotation.z.value,
+    };
     camera.fov = +form.fov.value;
     camera.distance = +form.distance.value;
-    updateTime(form.time, renderer.render(new Resolution(+form.resolution.width.value, +form.resolution.height.value)));
+    updateTime(form.time, renderer.render({
+      width: +form.resolution.width.value,
+      height: +form.resolution.height.value,
+    }));
     axesRenderer.render(camera);
   });
 
@@ -56,7 +61,10 @@ export function init(renderer: Renderer) {
     form.resolution.height.value = String(+form.resolution.width.value * 3 / 4);
   });
 
-  updateTime(form.time, renderer.render(new Resolution(+form.resolution.width.value, +form.resolution.height.value)));
+  updateTime(form.time, renderer.render({
+    width: +form.resolution.width.value,
+    height: +form.resolution.height.value,
+  }));
   axesRenderer.render(camera);
 }
 

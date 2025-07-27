@@ -1,6 +1,6 @@
 import { LinearEquation } from '../equations/linear-equation';
 import { Triangle3d } from '../geometry/triangle-3d';
-import { Material } from "./material";
+import { Material } from "../models/material.model";
 
 export class Mesh {
   public readonly equation: LinearEquation;
