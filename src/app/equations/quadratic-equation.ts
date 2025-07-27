@@ -1,3 +1,4 @@
+// TODO: to function
 export class QuadraticEquation {
   constructor(public readonly a: number,
               public readonly b: number,
@@ -5,7 +6,9 @@ export class QuadraticEquation {
 
   public solve(): number[] {
     const d = this.b * this.b - 4 * this.a * this.c;
-    if (d < 0) return null;
+    if (d < 0) {
+      return [];
+    }
 
     const denominator = 2 * this.a;
     if (d === 0) return [-this.b / denominator];

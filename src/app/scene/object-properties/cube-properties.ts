@@ -1,5 +1,5 @@
 import { ObjectProperties } from "./object-properties";
 
-export class CubeProperties extends ObjectProperties {
+export interface CubeProperties extends ObjectProperties {
   width: number;
 }

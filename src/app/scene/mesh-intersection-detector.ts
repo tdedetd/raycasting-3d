@@ -27,7 +27,7 @@ export class MeshIntersectionDetector {
     return intersections;
   }
 
-  private static getIntersectionPoint(equationSystem: SystemOfLinearEquations3eq3Var): Point3d {
+  private static getIntersectionPoint(equationSystem: SystemOfLinearEquations3eq3Var): Point3d | null {
     const solution = equationSystem.getSolution();
     if (!solution) return null;
     return new Point3d(solution[0], solution[1], solution[2]);

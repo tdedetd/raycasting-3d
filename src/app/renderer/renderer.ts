@@ -6,12 +6,11 @@ import { Camera } from '../scene/camera';
 import { Line3d } from '../geometry/line-3d';
 
 export class Renderer {
-
-  private screen: Screen;
-
-  constructor(private readonly scene: Scene,
-              private readonly canvasId: string,
-              private readonly camera: Camera) {}
+  constructor(
+    private readonly scene: Scene,
+    private readonly canvasId: string,
+    private readonly camera: Camera
+  ) {}
 
   public getCamera() {
     return this.camera;
@@ -21,9 +20,8 @@ export class Renderer {
    * @returns time of rendering in miliseconds
    */
   public render(resolution: Resolution): number {
-
     const t0 = performance.now();
-    this.screen = new Screen(this.canvasId, resolution);
+    const screen = new Screen(this.canvasId, resolution);
     this.camera.resolution = resolution;
     this.camera.updateCanvasConfig();
 
@@ -31,7 +29,7 @@ export class Renderer {
       for (let x = 0; x < resolution.width; x++) {
         const ray = this.camera.generateRay(x, y);
         const color = this.getColor(ray);
-        this.screen.drawPixel(x, y, color);
+        screen.drawPixel(x, y, color);
       }
     }
 
@@ -39,7 +37,7 @@ export class Renderer {
   }
 
   private getColor(ray: Line3d) {
-    let closestIntersection: Intersection = null;
+    let closestIntersection: Intersection | undefined;
 
     this.scene.getObjects().forEach(obj => {
       const intersections = obj.getIntersections(ray);
@@ -50,11 +48,11 @@ export class Renderer {
       });
     });
 
-    if (!closestIntersection) {
+    if (closestIntersection) {
+      const color = closestIntersection.material.color;
+      return color.mix(this.scene.backgroundColor, closestIntersection.distance / this.camera.distance);
+    } else {
       return this.scene.backgroundColor;
     }
-
-    const color = closestIntersection.material.color;
-    return color.mix(this.scene.backgroundColor, closestIntersection.distance / this.camera.distance);
   }
 }

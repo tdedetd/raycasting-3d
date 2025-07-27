@@ -1,5 +1,5 @@
 import { ObjectProperties } from "./object-properties";
 
-export class SphereProperties extends ObjectProperties {
+export interface SphereProperties extends ObjectProperties {
   radius: number;
 }

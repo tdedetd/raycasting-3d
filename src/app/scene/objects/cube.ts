@@ -34,22 +34,22 @@ export class Cube implements SceneObject {
       }
     });
 
-    meshes.push(
-      new Mesh(new Triangle3d(vertices[3], vertices[7], vertices[4]), this.properties.material),
-      new Mesh(new Triangle3d(vertices[3], vertices[0], vertices[4]), this.properties.material),
-      new Mesh(new Triangle3d(vertices[0], vertices[4], vertices[5]), this.properties.material),
-      new Mesh(new Triangle3d(vertices[0], vertices[1], vertices[5]), this.properties.material),
-      new Mesh(new Triangle3d(vertices[1], vertices[5], vertices[6]), this.properties.material),
-      new Mesh(new Triangle3d(vertices[1], vertices[2], vertices[6]), this.properties.material),
-      new Mesh(new Triangle3d(vertices[2], vertices[6], vertices[7]), this.properties.material),
-      new Mesh(new Triangle3d(vertices[2], vertices[3], vertices[7]), this.properties.material),
-      new Mesh(new Triangle3d(vertices[0], vertices[1], vertices[2]), this.properties.material),
-      new Mesh(new Triangle3d(vertices[0], vertices[3], vertices[2]), this.properties.material),
-      new Mesh(new Triangle3d(vertices[5], vertices[6], vertices[7]), this.properties.material),
-      new Mesh(new Triangle3d(vertices[5], vertices[4], vertices[7]), this.properties.material)
-    );
-
-    return meshes;
+    return ([
+      [vertices[3], vertices[7], vertices[4]],
+      [vertices[3], vertices[0], vertices[4]],
+      [vertices[0], vertices[4], vertices[5]],
+      [vertices[0], vertices[1], vertices[5]],
+      [vertices[1], vertices[5], vertices[6]],
+      [vertices[1], vertices[2], vertices[6]],
+      [vertices[2], vertices[6], vertices[7]],
+      [vertices[2], vertices[3], vertices[7]],
+      [vertices[0], vertices[1], vertices[2]],
+      [vertices[0], vertices[3], vertices[2]],
+      [vertices[5], vertices[6], vertices[7]],
+      [vertices[5], vertices[4], vertices[7]],
+    ] satisfies [Point3d, Point3d, Point3d][])
+      .map(
+        ([point1, point2, point3]) => new Mesh(new Triangle3d(point1, point2, point3), this.properties.material)
+      );
   }
-
 }

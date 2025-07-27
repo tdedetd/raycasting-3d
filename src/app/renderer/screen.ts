@@ -4,21 +4,19 @@ import { Resolution } from '../misc/resolution';
 import { Color } from './color';
 
 export class Screen {
-
+  public readonly resolution: Resolution;
   private readonly background: string;
   private readonly canvasEl: HTMLCanvasElement;
   private readonly context: CanvasRenderingContext2D;
-  public readonly resolution: Resolution;
 
   constructor(id: string, resolution: Resolution, background: string = 'black') {
     this.resolution = resolution;
     this.background = background;
-    this.canvasEl = <HTMLCanvasElement>document.getElementById(id);
-    if (!this.canvasEl) throw new RendererError(`Element '${id}' not found!`);
+    this.canvasEl = this.getCanvasElement(id);
 
     this.canvasEl.width = resolution.width;
     this.canvasEl.height = resolution.height;
-    this.context = this.canvasEl.getContext('2d');
+    this.context = this.getContext(this.canvasEl);
   }
 
   public clear() {
@@ -39,5 +37,23 @@ export class Screen {
   public drawPixel(x: number, y: number, color: Color) {
     this.context.fillStyle = color.toString();
     this.context.fillRect(x, y, 1, 1);
+  }
+
+  private getCanvasElement(id: string): HTMLCanvasElement {
+    const canvasEl = document.querySelector<HTMLCanvasElement>(id);
+    if (canvasEl) {
+      return canvasEl;
+    } else {
+      throw new RendererError(`Element '${id}' not found!`);
+    }
+  }
+
+  private getContext(element: HTMLCanvasElement): CanvasRenderingContext2D {
+    const context = this.canvasEl.getContext('2d');
+    if (context) {
+      return context;
+    } else {
+      throw new RendererError('No contaxt for canvas element');
+    }
   }
 }

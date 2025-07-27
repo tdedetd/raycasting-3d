@@ -18,7 +18,6 @@ export class Sphere implements SceneObject {
     const c = x0 * x0 + x1 * x1 + y0 * y0 + y1 * y1 + z0 * z0 + z1 * z1 - r * r - 2 * (x0 * x1 + y0 * y1 + z0 * z1);
 
     const solutions = new QuadraticEquation(a, b, c).solve();
-    if (!solutions) return [];
 
     return solutions.map((solution) => {
       const point = new Point3d(x1 + v.x * solution, y1 + v.y * solution, z1 + v.z * solution);

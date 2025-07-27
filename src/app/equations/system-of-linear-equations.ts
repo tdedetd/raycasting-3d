@@ -20,7 +20,7 @@ export class SystemOfLinearEquations {
   /**
    * Returns null, if system has no solutions
    */
-  public getSolution(): number[] {
+  public getSolution(): number[] | null {
     // by Cramer's rule
 
     const matrix = new SquareMatrix(this.equations.map(eq => eq.coefficients));

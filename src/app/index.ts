@@ -19,7 +19,7 @@ scene.addObjects(
     material: {
       color: new Color(64, 64, 255)
     },
-    width: 5
+    width: 5,
   }),
   new Cube({
     position: new Point3d(-2, 4, 1.5),
@@ -27,7 +27,7 @@ scene.addObjects(
     material: {
       color: new Color(255, 0, 0)
     },
-    width: 3
+    width: 3,
   }),
   new Cube({
     position: new Point3d(0, 0, -50),
@@ -35,7 +35,7 @@ scene.addObjects(
     material: {
       color: new Color(255, 255, 128)
     },
-    width: 100
+    width: 100,
   }),
   new Sphere({
     material: {

@@ -1,5 +1,5 @@
 import { Color } from '../renderer/color';
 
-export class Material {
+export interface Material {
   color: Color;
 }
