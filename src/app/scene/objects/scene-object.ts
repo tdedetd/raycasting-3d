@@ -1,6 +1,6 @@
-import { Line3d } from '../../geometry/line-3d';
 import { Point3d } from '../../geometry/point-3d';
 import { Intersection } from '../../renderer/intersection';
+import { CameraRay } from '../camera-ray';
 import { Material } from '../material';
 import { ObjectProperties } from '../object-properties/object-properties';
 import { Rotation } from '../rotation';
@@ -16,7 +16,7 @@ export abstract class SceneObject {
     this.material = properties.material;
   }
 
-  public getIntersections(ray: Line3d): Intersection[] {
+  public getIntersections(ray: CameraRay): Intersection[] {
     throw new Error('Method is not implemented');
   }
 }

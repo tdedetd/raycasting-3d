@@ -4,6 +4,8 @@ import { Intersection } from './intersection';
 import { Scene } from '../scene/scene';
 import { Camera } from '../scene/camera';
 import { Line3d } from '../geometry/line-3d';
+import { Counters } from '../debug/counters';
+import { CameraRay } from '../scene/camera-ray';
 
 export class Renderer {
   constructor(
@@ -33,10 +35,11 @@ export class Renderer {
       }
     }
 
+    Counters.log();
     return performance.now() - t0;
   }
 
-  private getColor(ray: Line3d) {
+  private getColor(ray: CameraRay) {
     let closestIntersection: Intersection | undefined;
 
     this.scene.getObjects().forEach(obj => {

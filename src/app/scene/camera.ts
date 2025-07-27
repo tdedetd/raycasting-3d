@@ -2,6 +2,9 @@ import { Line3d } from '../geometry/line-3d';
 import { Point3d } from '../geometry/point-3d';
 import { Resolution } from '../misc/resolution';
 import { Rotator } from '../misc/rotator';
+import { getEquations } from '../utils/get-equations';
+import { getLength } from '../utils/get-length';
+import { CameraRay } from './camera-ray';
 import { Rotation } from './rotation';
 
 interface CameraOptions {
@@ -43,13 +46,20 @@ export class Camera {
   }
 
   /** The first point is always position of camera */
-  generateRay(x: number, y: number): Line3d {
-
+  generateRay(x: number, y: number): CameraRay {
     const coordY = (this.canvasPixelSize * x + this.canvasPixelSize / 2) - this.canvasWidth / 2;
     const coordZ = (this.canvasPixelSize * (this.resolution.height - y - 1) + this.canvasPixelSize / 2) - this.canvasHeight / 2;
     const rotatedPoint = this.rotator.rotatePoint(this.rotation, new Point3d(this.canvasCoordX, coordY, coordZ));
 
-    return new Line3d(this.position, rotatedPoint);
+    const line: Line3d = {
+      point1: this.position,
+      point2: rotatedPoint,
+    };
+    return {
+      line,
+      length: getLength(line.point1, line.point2),
+      equations: getEquations(line),
+    }
   }
 
   updateCanvasConfig(position?: Point3d) {
