@@ -20,8 +20,8 @@ export class Cube extends SceneObject {
     this.meshes = this.getMeshes();
   }
 
-  getIntersections(ray: Line3d) {
-    return MeshIntersectionDetector.getIntersections(ray, this.meshes);
+  getIntersections(line: Line3d) {
+    return MeshIntersectionDetector.getIntersections(line, this.meshes);
   }
 
   private getMeshes(): Mesh[] {

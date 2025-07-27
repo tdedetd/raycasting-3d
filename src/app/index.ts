@@ -1,4 +1,4 @@
-import { defaultScene } from './constants/scenes/default-scene';
+import { defaultScene } from './constants/scene-presets/default-scene';
 import { Point3d } from './geometry/point-3d';
 import { Resolution } from './misc/resolution';
 import { Renderer } from './renderer/renderer';

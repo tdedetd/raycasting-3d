@@ -6,22 +6,22 @@ import { Mesh } from './mesh';
 
 export class MeshIntersectionDetector {
 
-  public static getIntersections(ray: Line3d, meshes: Mesh[]): Intersection[] {
+  public static getIntersections(line: Line3d, meshes: Mesh[]): Intersection[] {
 
     const intersections: Intersection[] = [];
 
     meshes.forEach(mesh => {
       const equationSystem = new SystemOfLinearEquations3eq3Var([
-        ...ray.getEquations(), mesh.triangle.getPlaneEquation()
+        ...line.getEquations(), mesh.triangle.getPlaneEquation()
       ]);
 
       const point = MeshIntersectionDetector.getIntersectionPoint(equationSystem);
       if (!point || !mesh.triangle.pointInside(point)) return;
 
-      const inInterval = point.x > ray.point1.x && point.x < ray.point2.x || point.x > ray.point2.x && point.x < ray.point1.x;
+      const inInterval = point.x > line.point1.x && point.x < line.point2.x || point.x > line.point2.x && point.x < line.point1.x;
       if (!inInterval) return;
 
-      intersections.push(new Intersection(mesh.material, point, new Line3d(point, ray.point1).getLength()));
+      intersections.push(new Intersection(mesh.material, point, new Line3d(point, line.point1).getLength()));
     });
 
     return intersections;
