@@ -9,11 +9,14 @@ import { SceneObject } from './scene-object';
 
 const V_ANGLE = Math.atan(1 / Math.sqrt(2)) * 180 / Math.PI;
 
-export class Cube implements SceneObject {
+export class Cube extends SceneObject {
+  public readonly width: number;
 
   private meshes: Mesh[];
 
-  constructor(public properties: CubeProperties) {
+  constructor(properties: CubeProperties) {
+    super(properties);
+    this.width = properties.width;
     this.meshes = this.getMeshes();
   }
 
@@ -22,15 +25,14 @@ export class Cube implements SceneObject {
   }
 
   private getMeshes(): Mesh[] {
-    const meshes: Mesh[] = [];
-    const radius = 0.5 * this.properties.width / Math.sin(V_ANGLE * Math.PI / 180);
+    const radius = 0.5 * this.width / Math.sin(V_ANGLE * Math.PI / 180);
 
     // TODO: rotation
     const vertices: Point3d[] = [];
 
     [-V_ANGLE, V_ANGLE].forEach(vAngle => {
       for (let hAngle = 45; hAngle < 360; hAngle += 90) {
-        vertices.push(new PointSpherical(radius, vAngle, hAngle).toCartesian(this.properties.position));
+        vertices.push(new PointSpherical(radius, vAngle, hAngle).toCartesian(this.position));
       }
     });
 
@@ -49,7 +51,7 @@ export class Cube implements SceneObject {
       [vertices[5], vertices[4], vertices[7]],
     ] satisfies [Point3d, Point3d, Point3d][])
       .map(
-        ([point1, point2, point3]) => new Mesh(new Triangle3d(point1, point2, point3), this.properties.material)
+        ([point1, point2, point3]) => new Mesh(new Triangle3d(point1, point2, point3), this.material)
       );
   }
 }

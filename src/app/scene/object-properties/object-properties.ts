@@ -4,6 +4,6 @@ import { Rotation } from "../rotation";
 
 export interface ObjectProperties {
   position: Point3d;
-  rotation: Rotation;
+  rotation?: Rotation;
   material: Material;
 }
