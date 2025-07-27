@@ -1,6 +1,6 @@
 import { MatrixError } from '../errors/matrix-error';
 import { MatrixOperationError } from '../errors/matrix-operation-error';
-import { listUtils } from '../utils/index';
+import { areElementsEqual } from '../utils/are-elements-equal';
 
 export class Matrix {
   public columns: number;
@@ -8,7 +8,9 @@ export class Matrix {
   public readonly values: number[][];
 
   constructor(values: number[][]) {
-    if (!values) throw new MatrixError('Matrix is empty');
+    if (!values) {
+      throw new MatrixError('Matrix is empty');
+    }
     this.values = values;
 
     const size = this.calculateSize();
@@ -18,10 +20,14 @@ export class Matrix {
 
   public add(matrix: Matrix): Matrix {
     if (this.rows !== matrix.rows || this.columns !== matrix.columns) {
-      throw new MatrixOperationError(`Matrix sizes are different. ${this.rows}x${this.columns}, ${matrix.rows}x${matrix.columns}`);
+      throw new MatrixOperationError(
+        `Matrix sizes are different. ${this.rows}x${this.columns}, ${matrix.rows}x${matrix.columns}`
+      );
     }
 
-    return new Matrix(this.values.map((row, rowIndex) => row.map((val, columnIndex) => val + matrix.values[rowIndex][columnIndex])));
+    return new Matrix(
+      this.values.map((row, rowIndex) => row.map((val, columnIndex) => val + matrix.values[rowIndex][columnIndex]))
+    );
   }
 
   public multiply(multiplier: number | Matrix): Matrix {
@@ -34,10 +40,14 @@ export class Matrix {
 
   public subtract(matrix: Matrix): Matrix {
     if (this.rows !== matrix.rows || this.columns !== matrix.columns) {
-      throw new MatrixOperationError(`Matrix sizes are different. ${this.rows}x${this.columns}, ${matrix.rows}x${matrix.columns}`);
+      throw new MatrixOperationError(
+        `Matrix sizes are different. ${this.rows}x${this.columns}, ${matrix.rows}x${matrix.columns}`
+      );
     }
 
-    return new Matrix(this.values.map((row, rowIndex) => row.map((val, columnIndex) => val - matrix.values[rowIndex][columnIndex])));
+    return new Matrix(
+      this.values.map((row, rowIndex) => row.map((val, columnIndex) => val - matrix.values[rowIndex][columnIndex]))
+    );
   }
 
   /**
@@ -45,7 +55,7 @@ export class Matrix {
    * @param rows
    * @param columns
    */
-  protected throwSizeError(rows: number, columns: number) {
+  protected throwSizeError(rows: number, columns: number): void {
     throw new MatrixError(`Matrix must be ${rows} rows and ${columns} columns. Now is ${this.rows}x${this.columns}`);
   }
 
@@ -54,15 +64,19 @@ export class Matrix {
     let columns = 0;
 
     rows = this.values.length;
-    if (rows === 0) throw new MatrixError('There are no rows in matrix');
+    if (rows === 0) {
+      throw new MatrixError('There are no rows in matrix');
+    }
 
     const lengthsOfRows = this.values.map(row => row.length);
 
-    if (!listUtils.areElementsEqual(lengthsOfRows)) {
+    if (!areElementsEqual(lengthsOfRows)) {
       throw new MatrixError(`Lengths of rows are different: ${lengthsOfRows}`);
     }
 
-    if (this.values[0].length === 0) throw new MatrixError('There are no columns in matrix');
+    if (this.values[0].length === 0) {
+      throw new MatrixError('There are no columns in matrix');
+    }
     columns = this.values[0].length;
 
     return { rows, columns };
@@ -72,7 +86,7 @@ export class Matrix {
     return new Matrix(this.values.map(row => row.map(val => val * multiplier)));
   }
 
-  private multiplyByMatrix(matrix: Matrix) {
+  private multiplyByMatrix(matrix: Matrix): Matrix {
     const newValues: number[][] = [];
 
     for (let rowIndex = 0; rowIndex < this.rows; rowIndex++) {

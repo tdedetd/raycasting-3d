@@ -20,7 +20,9 @@ export class PointSpherical {
     const z = this.distance * Math.cos(angleVerticalRad);
 
     const point = new Point3d(x, y, z);
-    if (origin) return point.add(origin);
+    if (origin) {
+      return point.add(origin);
+    }
     return point;
   }
 }

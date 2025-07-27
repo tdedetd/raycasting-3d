@@ -16,6 +16,7 @@ export class Counters {
         };
       }, {});
 
+    // eslint-disable-next-line no-console
     console.log(formattedCounters);
   }
 

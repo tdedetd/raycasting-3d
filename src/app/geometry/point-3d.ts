@@ -10,7 +10,7 @@ export class Point3d {
     return new Point3d(this.x + point.x, this.y + point.y, this.z + point.z);
   }
 
-  public subtract(point: Point3d) {
+  public subtract(point: Point3d): Point3d {
     return new Point3d(this.x - point.x, this.y - point.y, this.z - point.z);
   }
 

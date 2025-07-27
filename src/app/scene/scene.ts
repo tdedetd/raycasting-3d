@@ -15,11 +15,11 @@ export class Scene {
     this.objects = properties?.objects ?? [];
   }
 
-  public addObjects(...objects: SceneObject[]) {
+  public addObjects(...objects: SceneObject[]): void {
     this.objects.push(...objects);
   }
 
-  public getObjects() {
+  public getObjects(): SceneObject[] {
     return this.objects;
   }
 }

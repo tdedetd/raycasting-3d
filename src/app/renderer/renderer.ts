@@ -1,10 +1,11 @@
-import { Resolution } from "../models/resolution.model";
+import { Resolution } from '../models/resolution.model';
 import { Screen } from './screen';
 import { Intersection } from '../models/intersection.model';
 import { Scene } from '../scene/scene';
 import { Camera } from '../scene/camera';
 import { Counters } from '../debug/counters';
 import { CameraRay } from '../models/camera-ray.model';
+import { Color } from './color';
 
 export class Renderer {
   constructor(
@@ -13,7 +14,7 @@ export class Renderer {
     private readonly camera: Camera
   ) {}
 
-  public getCamera() {
+  public getCamera(): Camera {
     return this.camera;
   }
 
@@ -38,7 +39,7 @@ export class Renderer {
     return performance.now() - t0;
   }
 
-  private getColor(ray: CameraRay) {
+  private getColor(ray: CameraRay): Color {
     let closestIntersection: Intersection | undefined;
 
     this.scene.getObjects().forEach(obj => {
@@ -53,8 +54,7 @@ export class Renderer {
     if (closestIntersection) {
       const color = closestIntersection.material.color;
       return color.mix(this.scene.backgroundColor, closestIntersection.distance / this.camera.distance);
-    } else {
-      return this.scene.backgroundColor;
     }
+    return this.scene.backgroundColor;
   }
 }

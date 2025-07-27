@@ -2,8 +2,9 @@ import { Point3d } from '../../geometry/point-3d';
 import { PointSpherical } from '../../geometry/point-spherical';
 import { Triangle3d } from '../../geometry/triangle-3d';
 import { CameraRay } from '../../models/camera-ray.model';
-import { Mesh } from "../mesh";
-import { MeshIntersectionDetector } from "../mesh-intersection-detector";
+import { Intersection } from '../../models/intersection.model';
+import { Mesh } from '../mesh';
+import { MeshIntersectionDetector } from '../mesh-intersection-detector';
 import { CubeProperties } from '../object-properties/cube-properties';
 import { SceneObject } from './scene-object';
 
@@ -20,7 +21,7 @@ export class Cube extends SceneObject {
     this.meshes = this.getMeshes();
   }
 
-  getIntersections(ray: CameraRay) {
+  public getIntersections(ray: CameraRay): Intersection[] {
     return MeshIntersectionDetector.getIntersections(ray, this.meshes);
   }
 

@@ -1,5 +1,5 @@
 import { EquationError } from '../errors/equation-error';
-import { LinearEquation } from './linear-equation';
+import { LinearEquation } from '../models/linear-equation.model';
 import { SystemOfLinearEquations } from './system-of-linear-equations';
 
 // TODO: generic for Matrix to class
@@ -8,8 +8,12 @@ export class SystemOfLinearEquations3eq3Var extends SystemOfLinearEquations {
   constructor(equations: LinearEquation[]) {
     super(equations);
 
-    if (equations.length !== 3) throw new EquationError('The number of equations must be 3. Now - ' + equations.length);
-    if (equations[0].coefficients.length !== 3) throw new EquationError('The number of variables must be 3. Now - ' + equations.length);
+    if (equations.length !== 3) {
+      throw new EquationError('The number of equations must be 3. Now - ' + equations.length);
+    }
+    if (equations[0].coefficients.length !== 3) {
+      throw new EquationError('The number of variables must be 3. Now - ' + equations.length);
+    }
   }
 
   /**
@@ -36,21 +40,21 @@ export class SystemOfLinearEquations3eq3Var extends SystemOfLinearEquations {
    * @returns coordinates x, y and z
    */
   private getSolutionByGauss(): number[] {
+
     /** values (coefficients) */
     const v = this.equations.map(eq => [...eq.coefficients, eq.constant]);
-    const
-      a = v[0][0],
-      b = v[0][1],
-      c = v[0][2],
-      d = v[0][3],
-      e = v[1][0],
-      f = v[1][1],
-      i = v[1][2],
-      j = v[1][3],
-      k = v[2][0],
-      m = v[2][1],
-      p = v[2][2],
-      q = v[2][3];
+    const a = v[0][0];
+    const b = v[0][1];
+    const c = v[0][2];
+    const d = v[0][3];
+    const e = v[1][0];
+    const f = v[1][1];
+    const i = v[1][2];
+    const j = v[1][3];
+    const k = v[2][0];
+    const m = v[2][1];
+    const p = v[2][2];
+    const q = v[2][3];
 
     const ea = e / a;
     const ka = k / a;

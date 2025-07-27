@@ -16,6 +16,7 @@ export abstract class SceneObject {
     this.material = properties.material;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public getIntersections(ray: CameraRay): Intersection[] {
     throw new Error('Method is not implemented');
   }

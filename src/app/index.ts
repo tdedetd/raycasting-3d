@@ -2,7 +2,7 @@ import { defaultScene } from './constants/scene-presets/default-scene';
 import { Point3d } from './geometry/point-3d';
 import { Renderer } from './renderer/renderer';
 import { Camera } from './scene/camera';
-import { uiUtils } from './utils/index';
+import { init } from './utils/ui';
 
 const camera = new Camera({
   position: new Point3d(-7, -5, 6),
@@ -15,4 +15,4 @@ const camera = new Camera({
   fov: 90,
 });
 
-uiUtils.init(new Renderer(defaultScene, 'canvas', camera));
+init(new Renderer(defaultScene, 'canvas', camera));

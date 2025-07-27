@@ -1,18 +1,18 @@
 import { EquationError } from '../errors/equation-error';
 import { SquareMatrix } from '../matrix/square-matrix';
-import { listUtils } from '../utils/index';
-import { LinearEquation } from './linear-equation';
+import { LinearEquation } from '../models/linear-equation.model';
+import { areElementsEqual } from '../utils/are-elements-equal';
 
 export class SystemOfLinearEquations {
 
-  equations: LinearEquation[];
+  public readonly equations: LinearEquation[];
 
   // Number of variables = number of equations
   constructor(equations: LinearEquation[]) {
     this.equations = equations;
 
     const numbersOfCoefficients = equations.map(eq => eq.coefficients.length);
-    if (!listUtils.areElementsEqual(numbersOfCoefficients)) {
+    if (!areElementsEqual(numbersOfCoefficients)) {
       throw new EquationError(`Different numbers of coefficients: ${numbersOfCoefficients}`);
     }
   }
@@ -21,12 +21,15 @@ export class SystemOfLinearEquations {
    * Returns null, if system has no solutions
    */
   public getSolution(): number[] | null {
+
     // by Cramer's rule
 
     const matrix = new SquareMatrix(this.equations.map(eq => eq.coefficients));
 
     const mainDeterminant = matrix.getDeterminant();
-    if (mainDeterminant === 0) return null;
+    if (mainDeterminant === 0) {
+      return null;
+    }
     const solution: number[] = [];
 
     for (let columnIndex = 0; columnIndex < matrix.columns; columnIndex++) {

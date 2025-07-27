@@ -19,12 +19,12 @@ export class Screen {
     this.context = this.getContext(this.canvasEl);
   }
 
-  public clear() {
+  public clear(): void {
     this.context.fillStyle = this.background;
     this.context.clearRect(0, 0, this.resolution.width, this.resolution.height);
   }
 
-  public drawLine(point1: Point, point2: Point, color: Color, width = 1) {
+  public drawLine(point1: Point, point2: Point, color: Color, width = 1): void {
     this.context.strokeStyle = color.toString();
     this.context.lineWidth = width;
     this.context.lineCap = 'round';
@@ -34,7 +34,7 @@ export class Screen {
     this.context.stroke();
   }
 
-  public drawPixel(x: number, y: number, color: Color) {
+  public drawPixel(x: number, y: number, color: Color): void {
     this.context.fillStyle = color.toString();
     this.context.fillRect(x, y, 1, 1);
   }
@@ -43,17 +43,15 @@ export class Screen {
     const canvasEl = document.querySelector<HTMLCanvasElement>(`#${id}`);
     if (canvasEl) {
       return canvasEl;
-    } else {
-      throw new RendererError(`Element '${id}' not found!`);
     }
+    throw new RendererError(`Element '${id}' not found!`);
   }
 
   private getContext(element: HTMLCanvasElement): CanvasRenderingContext2D {
-    const context = this.canvasEl.getContext('2d');
+    const context = element.getContext('2d');
     if (context) {
       return context;
-    } else {
-      throw new RendererError('No contaxt for canvas element');
     }
+    throw new RendererError('No contaxt for canvas element');
   }
 }

@@ -1,4 +1,4 @@
-import { MatrixError } from "./matrix-error";
+import { MatrixError } from './matrix-error';
 
 export class MatrixOperationError extends MatrixError {
   constructor(message: string) {

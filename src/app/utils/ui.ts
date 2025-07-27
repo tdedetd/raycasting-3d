@@ -3,7 +3,8 @@ import { AxesRenderer } from '../renderer/axes-renderer';
 import { Point3d } from '../geometry/point-3d';
 
 // TODO: to object
-export function init(renderer: Renderer) {
+// eslint-disable-next-line max-lines-per-function
+export function init(renderer: Renderer): void {
   const camera = renderer.getCamera();
   const button = byId('button-draw');
   const axesRenderer = new AxesRenderer('axes');
@@ -42,36 +43,40 @@ export function init(renderer: Renderer) {
   form.resolution.height.value = String(camera.resolution.height);
 
   button?.addEventListener('click', () => {
-    camera.position = new Point3d(+form.position.x.value, +form.position.y.value, +form.position.z.value);
+    camera.position = new Point3d(
+      Number(form.position.x.value),
+      Number(form.position.y.value),
+      Number(form.position.z.value)
+    );
     camera.rotation = {
-      x: +form.rotation.x.value,
-      y: +form.rotation.y.value,
-      z: +form.rotation.z.value,
+      x: Number(form.rotation.x.value),
+      y: Number(form.rotation.y.value),
+      z: Number(form.rotation.z.value),
     };
-    camera.fov = +form.fov.value;
-    camera.distance = +form.distance.value;
+    camera.fov = Number(form.fov.value);
+    camera.distance = Number(form.distance.value);
     updateTime(form.time, renderer.render({
-      width: +form.resolution.width.value,
-      height: +form.resolution.height.value,
+      width: Number(form.resolution.width.value),
+      height: Number(form.resolution.height.value),
     }));
     axesRenderer.render(camera);
   });
 
   form.resolution.width.addEventListener('change', () => {
-    form.resolution.height.value = String(+form.resolution.width.value * 3 / 4);
+    form.resolution.height.value = String(Number(form.resolution.width.value) * 3 / 4);
   });
 
   updateTime(form.time, renderer.render({
-    width: +form.resolution.width.value,
-    height: +form.resolution.height.value,
+    width: Number(form.resolution.width.value),
+    height: Number(form.resolution.height.value),
   }));
   axesRenderer.render(camera);
 }
 
-function byId(id: string) {
+function byId(id: string): HTMLElement | null {
   return document.getElementById(id);
 }
 
-function updateTime(element: HTMLDivElement, time: number) {
+function updateTime(element: HTMLDivElement, time: number): void {
   element.innerText = (time / 1000).toFixed(3) + ' s';
 }

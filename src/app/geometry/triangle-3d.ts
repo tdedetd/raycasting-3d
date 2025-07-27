@@ -1,6 +1,6 @@
-import { LinearEquation } from '../equations/linear-equation';
-import { Point3d } from "./point-3d";
-import { Vector } from "./vector-3d";
+import { LinearEquation } from '../models/linear-equation.model';
+import { Point3d } from './point-3d';
+import { Vector } from './vector-3d';
 
 export class Triangle3d {
 
@@ -14,13 +14,22 @@ export class Triangle3d {
     | z - z0   z1 - z0   z2 - z0 |
   */
   public getPlaneEquation(): LinearEquation {
-    const x0 = this.point1.x, y0 = this.point1.y, z0 = this.point1.z,
-          x1 = this.point2.x, y1 = this.point2.y, z1 = this.point2.z,
-          x2 = this.point3.x, y2 = this.point3.y, z2 = this.point3.z;
+    const x0 = this.point1.x;
+    const y0 = this.point1.y;
+    const z0 = this.point1.z;
+    const x1 = this.point2.x;
+    const y1 = this.point2.y;
+    const z1 = this.point2.z;
+    const x2 = this.point3.x;
+    const y2 = this.point3.y;
+    const z2 = this.point3.z;
 
-    const dx1 = x1 - x0, dx2 = x2 - x0,
-          dy1 = y1 - y0, dy2 = y2 - y0,
-          dz1 = z1 - z0, dz2 = z2 - z0;
+    const dx1 = x1 - x0;
+    const dx2 = x2 - x0;
+    const dy1 = y1 - y0;
+    const dy2 = y2 - y0;
+    const dz1 = z1 - z0;
+    const dz2 = z2 - z0;
 
     const coefX = dy1 * dz2 - dy2 * dz1;
     const coefY = dx2 * dz1 - dx1 * dz2;
@@ -29,7 +38,10 @@ export class Triangle3d {
                      y0 * (dx1 * dz2 - dx2 * dz1) +
                      z0 * (dx2 * dy1 - dx1 * dy2);
 
-    return new LinearEquation([coefX, coefY, coefZ], constant);
+    return {
+      coefficients: [coefX, coefY, coefZ],
+      constant
+    };
   }
 
   /**

@@ -1,4 +1,4 @@
-import { LinearEquation } from '../equations/linear-equation';
+import { LinearEquation } from './linear-equation.model';
 import { Line3d } from './line-3d.models';
 
 export interface CameraRay {

@@ -5,7 +5,9 @@ import { Rotation } from '../models/rotation.model';
 export class Rotator {
 
   constructor(public readonly pivot?: Point3d) {
-    if (!pivot) this.pivot = new Point3d(0, 0, 0);
+    if (!pivot) {
+      this.pivot = new Point3d(0, 0, 0);
+    }
   }
 
   /**

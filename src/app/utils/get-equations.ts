@@ -1,4 +1,4 @@
-import { LinearEquation } from '../equations/linear-equation';
+import { LinearEquation } from '../models/linear-equation.model';
 import { Line3d } from '../models/line-3d.models';
 import { Point3d } from '../geometry/point-3d';
 import { Triangle3d } from '../geometry/triangle-3d';

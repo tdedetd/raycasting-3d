@@ -9,7 +9,9 @@ export function solveQuadraticEquation(
   }
 
   const denominator = 2 * a;
-  if (d === 0) return [-b / denominator];
+  if (d === 0) {
+    return [-b / denominator];
+  }
 
   const sqrtd = Math.sqrt(d);
   return [(-b + sqrtd) / denominator, (-b - sqrtd) / denominator];

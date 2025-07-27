@@ -4,8 +4,8 @@ import { Vector } from '../geometry/vector-3d';
 import { Rotator } from './rotator';
 import { Camera } from '../scene/camera';
 import { Rotation } from '../models/rotation.model';
-import { Color } from "./color";
-import { Screen } from "./screen";
+import { Color } from './color';
+import { Screen } from './screen';
 
 export class AxesRenderer {
   private rotator: Rotator;
@@ -16,7 +16,7 @@ export class AxesRenderer {
     this.screen = new Screen(canvasId, { width: 320, height: 240 }, 'transparent');
   }
 
-  public render(camera: Camera) {
+  public render(camera: Camera): void {
     const cameraPosition = new Point3d(-2, 0, 0);
     const vfov = this.getVerticalFov(camera);
 
@@ -53,8 +53,12 @@ export class AxesRenderer {
     let hAngle = new Vector(camDirPoint).getAngle(new Vector(new Point3d(dirPoint.x, dirPoint.y, 0)));
     let vAngle = new Vector(camDirPoint).getAngle(new Vector(new Point3d(dirPoint.x, 0, dirPoint.z)));
 
-    if (dirPoint.y < 0) hAngle = -hAngle;
-    if (dirPoint.z < 0) vAngle = -vAngle;
+    if (dirPoint.y < 0) {
+      hAngle = -hAngle;
+    }
+    if (dirPoint.z < 0) {
+      vAngle = -vAngle;
+    }
 
     const x = this.screen.resolution.width * (hAngle + hfov / 2) / hfov;
     const y = this.screen.resolution.height - (this.screen.resolution.height * (vAngle + vfov / 2) / vfov);
