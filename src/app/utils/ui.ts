@@ -1,33 +1,35 @@
 import { Renderer } from '../renderer/renderer';
 import { AxesRenderer } from '../renderer/axes-renderer';
 import { Point3d } from '../geometry/point-3d';
+import { getElement } from './get-element';
+
+const form = {
+  position: {
+    x: getElement<HTMLInputElement>('input-position-x'),
+    y: getElement<HTMLInputElement>('input-position-y'),
+    z: getElement<HTMLInputElement>('input-position-z'),
+  },
+  rotation: {
+    x: getElement<HTMLInputElement>('input-rotation-x'),
+    y: getElement<HTMLInputElement>('input-rotation-y'),
+    z: getElement<HTMLInputElement>('input-rotation-z'),
+  },
+  fov: getElement<HTMLInputElement>('input-fov'),
+  distance: getElement<HTMLInputElement>('input-distance'),
+  time: getElement<HTMLDivElement>('div-time'),
+  resolution: {
+    width: getElement<HTMLInputElement>('input-width'),
+    height: getElement<HTMLInputElement>('input-height'),
+  },
+  renderButton: getElement<HTMLButtonElement>('button-render'),
+  interruptRenderButton: getElement<HTMLButtonElement>('button-interrupt'),
+};
 
 // TODO: to object
 // eslint-disable-next-line max-lines-per-function
 export function init(renderer: Renderer): void {
   const camera = renderer.getCamera();
-  const button = byId('button-draw');
   const axesRenderer = new AxesRenderer('axes');
-
-  const form = {
-    position: {
-      x: <HTMLInputElement>byId('input-position-x'),
-      y: <HTMLInputElement>byId('input-position-y'),
-      z: <HTMLInputElement>byId('input-position-z'),
-    },
-    rotation: {
-      x: <HTMLInputElement>byId('input-rotation-x'),
-      y: <HTMLInputElement>byId('input-rotation-y'),
-      z: <HTMLInputElement>byId('input-rotation-z'),
-    },
-    fov: <HTMLInputElement>byId('input-fov'),
-    distance: <HTMLInputElement>byId('input-distance'),
-    time: <HTMLDivElement>byId('div-time'),
-    resolution: {
-      width: <HTMLInputElement>byId('input-width'),
-      height: <HTMLInputElement>byId('input-height')
-    }
-  };
 
   form.position.x.value = String(camera.position.x);
   form.position.y.value = String(camera.position.y);
@@ -42,7 +44,7 @@ export function init(renderer: Renderer): void {
   form.resolution.width.value = String(camera.resolution.width);
   form.resolution.height.value = String(camera.resolution.height);
 
-  button?.addEventListener('click', () => {
+  form.renderButton.addEventListener('click', () => {
     camera.position = new Point3d(
       Number(form.position.x.value),
       Number(form.position.y.value),
@@ -55,28 +57,34 @@ export function init(renderer: Renderer): void {
     };
     camera.fov = Number(form.fov.value);
     camera.distance = Number(form.distance.value);
-    updateTime(form.time, renderer.render({
-      width: Number(form.resolution.width.value),
-      height: Number(form.resolution.height.value),
-    }));
+    handleRender(renderer);
+
     axesRenderer.render(camera);
+  });
+
+  form.interruptRenderButton.addEventListener('click', () => {
+    renderer.interrupt();
   });
 
   form.resolution.width.addEventListener('change', () => {
     form.resolution.height.value = String(Number(form.resolution.width.value) * 3 / 4);
   });
 
-  updateTime(form.time, renderer.render({
-    width: Number(form.resolution.width.value),
-    height: Number(form.resolution.height.value),
-  }));
+  handleRender(renderer);
   axesRenderer.render(camera);
 }
 
-function byId(id: string): HTMLElement | null {
-  return document.getElementById(id);
-}
+function handleRender(renderer: Renderer): void {
+  form.renderButton.disabled = true;
+  form.interruptRenderButton.disabled = false;
+  form.time.innerText = '-';
 
-function updateTime(element: HTMLDivElement, time: number): void {
-  element.innerText = (time / 1000).toFixed(3) + ' s';
+  renderer.render({
+    width: Number(form.resolution.width.value),
+    height: Number(form.resolution.height.value),
+  }).then((time) => {
+    form.time.innerText = (time / 1000).toFixed(3) + ' s';
+    form.renderButton.disabled = false;
+    form.interruptRenderButton.disabled = true;
+  });
 }

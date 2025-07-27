@@ -1,6 +1,7 @@
 import { RendererError } from '../errors/renderer-error';
 import { Point } from '../models/point.model';
 import { Resolution } from '../models/resolution.model';
+import { getElement } from '../utils/get-element';
 import { Color } from './color';
 
 export class Screen {
@@ -12,7 +13,7 @@ export class Screen {
   constructor(id: string, resolution: Resolution, background: string = 'black') {
     this.resolution = resolution;
     this.background = background;
-    this.canvasEl = this.getCanvasElement(id);
+    this.canvasEl = getElement(id);
 
     this.canvasEl.width = resolution.width;
     this.canvasEl.height = resolution.height;
@@ -37,14 +38,6 @@ export class Screen {
   public drawPixel(x: number, y: number, color: Color): void {
     this.context.fillStyle = color.toString();
     this.context.fillRect(x, y, 1, 1);
-  }
-
-  private getCanvasElement(id: string): HTMLCanvasElement {
-    const canvasEl = document.querySelector<HTMLCanvasElement>(`#${id}`);
-    if (canvasEl) {
-      return canvasEl;
-    }
-    throw new RendererError(`Element '${id}' not found!`);
   }
 
   private getContext(element: HTMLCanvasElement): CanvasRenderingContext2D {
