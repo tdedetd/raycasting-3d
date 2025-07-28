@@ -35,9 +35,13 @@ export class Renderer {
     });
   }
 
+  public interrupt(): void {
+    this.interruptConfirmed = true;
+  }
+
   private renderPixel(
     resolve: (value: number | PromiseLike<number>) => void,
-    reject: (reason?: any) => void,
+    reject: (reason?: unknown) => void,
     resolution: Resolution,
     screen: Screen,
     y: number,
@@ -64,10 +68,6 @@ export class Renderer {
         this.interruptConfirmed = false;
       }
     });
-  }
-
-  public interrupt(): void {
-    this.interruptConfirmed = true;
   }
 
   private getColor(ray: CameraRay): Color {
