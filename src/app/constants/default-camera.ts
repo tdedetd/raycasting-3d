@@ -5,9 +5,10 @@ export const defaultCamera = new Camera({
   position: new Point3d(-7, -5, 6),
   rotation: { x: 0, y: 11, z: 17 },
   distance: 17,
+  fogStart: 3,
   resolution: {
-    width: 160,
-    height: 120,
+    width: 320,
+    height: 240,
   },
   fov: 90,
 });

@@ -26,15 +26,13 @@ export class MeshIntersectionDetector {
         point.x < ray.line.point1.x
       );
 
-      if (!inInterval) {
-        return;
+      if (inInterval) {
+        intersections.push({
+          material: mesh.material,
+          point,
+          distance: getLength(point, ray.line.point1),
+        });
       }
-
-      intersections.push({
-        material: mesh.material,
-        point,
-        distance: getLength(point, ray.line.point1),
-      });
     });
 
     return intersections;
@@ -42,9 +40,6 @@ export class MeshIntersectionDetector {
 
   private static getIntersectionPoint(equationSystem: SystemOfLinearEquations3eq3Var): Point3d | null {
     const solution = equationSystem.getSolution();
-    if (!solution) {
-      return null;
-    }
-    return new Point3d(solution[0], solution[1], solution[2]);
+    return solution ? new Point3d(solution[0], solution[1], solution[2]) : null;
   }
 }

@@ -12,6 +12,7 @@ interface CameraOptions {
   rotation?: Rotation;
   fov?: number;
   distance?: number;
+  fogStart?: number;
   resolution: Resolution;
 }
 
@@ -20,6 +21,7 @@ export class Camera {
   public rotation: Rotation;
   public fov: number;
   public distance: number;
+  public fogStart: number;
   public resolution: Resolution;
 
   /** Global width of canvas on scene */
@@ -36,11 +38,12 @@ export class Camera {
 
   private rotator = new Rotator();
 
-  constructor({ position, rotation, fov, distance, resolution }: CameraOptions) {
+  constructor({ position, rotation, fov, distance, fogStart, resolution }: CameraOptions) {
     this.position = position;
     this.rotation = rotation ?? { x: 0, y: 0, z: 0 };
     this.fov = fov ?? 90;
     this.distance = distance ?? 100;
+    this.fogStart = fogStart ?? 0;
     this.resolution = resolution;
     this.updateCanvasConfig(position);
   }

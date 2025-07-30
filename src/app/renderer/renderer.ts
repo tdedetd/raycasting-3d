@@ -5,7 +5,8 @@ import { Scene } from '../scene/scene';
 import { Camera } from '../scene/camera';
 import { Counters } from '../debug/counters';
 import { CameraRay } from '../models/camera-ray.model';
-import { Color } from './color';
+import { Color } from '../models/color.model';
+import { mixColors } from '../utils/mix-colors';
 
 export class Renderer {
   private startRenderTimestamp: number | null = null;
@@ -83,8 +84,16 @@ export class Renderer {
 
     if (closestIntersection) {
       const color = closestIntersection.material.color;
-      return color.mix(this.scene.backgroundColor, closestIntersection.distance / this.camera.distance);
+      return mixColors(color, this.scene.backgroundColor, this.getMixFogCoefficient(closestIntersection.distance));
     }
     return this.scene.backgroundColor;
+  }
+
+  private getMixFogCoefficient(distance: number): number {
+    if (distance < this.camera.fogStart) {
+      return 0;
+    }
+
+    return (distance - this.camera.fogStart) / (this.camera.distance - this.camera.fogStart);
   }
 }

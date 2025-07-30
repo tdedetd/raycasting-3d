@@ -4,7 +4,7 @@ import { Vector } from '../geometry/vector-3d';
 import { Rotator } from './rotator';
 import { Camera } from '../scene/camera';
 import { Rotation } from '../models/rotation.model';
-import { Color } from './color';
+import { Color } from '../models/color.model';
 import { Screen } from './screen';
 
 export class AxesRenderer {
@@ -36,16 +36,16 @@ export class AxesRenderer {
 
     const centralPoint: Point = { x: this.screen.resolution.width / 2, y: this.screen.resolution.height / 2 };
 
-    const shadowColor = new Color(0, 0, 0);
+    const shadowColor: Color = [0, 0, 0];
     this.screen.clear();
 
     this.screen.drawLine(centralPoint, xScreenEnd, shadowColor, 6);
     this.screen.drawLine(centralPoint, yScreenEnd, shadowColor, 6);
     this.screen.drawLine(centralPoint, zScreenEnd, shadowColor, 6);
 
-    this.screen.drawLine(centralPoint, xScreenEnd, new Color(255, 0, 0), 4);
-    this.screen.drawLine(centralPoint, yScreenEnd, new Color(0, 255, 0), 4);
-    this.screen.drawLine(centralPoint, zScreenEnd, new Color(0, 0, 255), 4);
+    this.screen.drawLine(centralPoint, xScreenEnd, [255, 0, 0], 4);
+    this.screen.drawLine(centralPoint, yScreenEnd, [0, 255, 0], 4);
+    this.screen.drawLine(centralPoint, zScreenEnd, [0, 0, 255], 4);
   }
 
   private getAxisEndScreenPoint(camDirPoint: Point3d, dirPoint: Point3d, hfov: number, vfov: number): Point {

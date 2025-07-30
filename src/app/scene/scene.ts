@@ -1,4 +1,4 @@
-import { Color } from '../renderer/color';
+import { Color } from '../models/color.model';
 import { Camera } from './camera';
 import { SceneObject } from './objects/scene-object';
 
@@ -15,7 +15,7 @@ export class Scene {
   private objects: SceneObject[];
 
   constructor(properties: SceneProperties) {
-    this.backgroundColor = properties?.backgroundColor ?? new Color(0, 0, 0);
+    this.backgroundColor = properties?.backgroundColor ?? [0, 0, 0];
     this.objects = properties?.objects ?? [];
     this.camera = properties.camera;
   }

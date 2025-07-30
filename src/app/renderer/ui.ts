@@ -30,7 +30,7 @@ export class Ui {
 
   public init(): void {
     const camera = this.renderer.camera;
-    const axesRenderer = new AxesRenderer('axes');
+    const axesRenderer = new AxesRenderer('canvas-axes');
 
     this.form.position.x.value = String(camera.position.x);
     this.form.position.y.value = String(camera.position.y);

@@ -2,7 +2,7 @@ import { RendererError } from '../errors/renderer-error';
 import { Point } from '../models/point.model';
 import { Resolution } from '../models/resolution.model';
 import { getElement } from '../utils/get-element';
-import { Color } from './color';
+import { Color } from '../models/color.model';
 
 export class Screen {
   public readonly resolution: Resolution;
@@ -26,7 +26,7 @@ export class Screen {
   }
 
   public drawLine(point1: Point, point2: Point, color: Color, width = 1): void {
-    this.context.strokeStyle = color.toString();
+    this.context.strokeStyle = this.colorToString(color);
     this.context.lineWidth = width;
     this.context.lineCap = 'round';
     this.context.beginPath();
@@ -36,7 +36,7 @@ export class Screen {
   }
 
   public drawPixel(x: number, y: number, color: Color): void {
-    this.context.fillStyle = color.toString();
+    this.context.fillStyle = this.colorToString(color);
     this.context.fillRect(x, y, 1, 1);
   }
 
@@ -46,5 +46,9 @@ export class Screen {
       return context;
     }
     throw new RendererError('No contaxt for canvas element');
+  }
+
+  private colorToString(color: Color): string {
+    return `rgb(${color[0]}, ${color[1]}, ${color[2]})`;
   }
 }

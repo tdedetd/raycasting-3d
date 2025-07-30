@@ -1,14 +1,14 @@
 import { Point3d } from '../../geometry/point-3d';
-import { Color } from '../../renderer/color';
+import { Color } from '../../models/color.model';
 import { Sphere } from '../../scene/objects/sphere';
 import { Scene } from '../../scene/scene';
 import { defaultCamera } from '../default-camera';
 
 const colors: Color[] = [
-  new Color(255, 0, 128),
-  new Color(255, 128, 0),
-  new Color(255, 0, 256),
-  new Color(255, 0, 0),
+  [255, 0, 128],
+  [255, 128, 0],
+  [255, 0, 256],
+  [255, 0, 0],
 ];
 
 const countX = 7;
@@ -37,7 +37,7 @@ for (let x = 0; x < countX; x++) {
 }
 
 export const spheresScene = new Scene({
-  backgroundColor: new Color(256, 256, 256),
+  backgroundColor: [255, 255, 255],
   objects,
   camera: defaultCamera,
 });
