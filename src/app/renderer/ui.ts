@@ -29,7 +29,7 @@ export class Ui {
   constructor(private readonly renderer: Renderer) { }
 
   public init(): void {
-    const camera = this.renderer.getCamera();
+    const camera = this.renderer.camera;
     const axesRenderer = new AxesRenderer('axes');
 
     this.form.position.x.value = String(camera.position.x);

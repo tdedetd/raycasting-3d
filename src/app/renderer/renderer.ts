@@ -14,11 +14,10 @@ export class Renderer {
   constructor(
     private readonly scene: Scene,
     private readonly canvasId: string,
-    private readonly camera: Camera
   ) {}
 
-  public getCamera(): Camera {
-    return this.camera;
+  public get camera(): Camera {
+    return this.scene.camera;
   }
 
   /**

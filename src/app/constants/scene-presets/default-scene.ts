@@ -5,8 +5,10 @@ import { Parallelepiped } from '../../scene/objects/parallelepiped';
 import { Plane } from '../../scene/objects/plane';
 import { Sphere } from '../../scene/objects/sphere';
 import { Scene } from '../../scene/scene';
+import { defaultCamera } from '../default-camera';
 
 export const defaultScene = new Scene({
+  camera: defaultCamera,
   objects: [
     new Cube({
       position: new Point3d(0, -1, 2.5),

@@ -10,6 +10,8 @@ body {
 
 .container {
   display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .canvas-container {
@@ -33,7 +35,6 @@ body {
 }
 
 .tools {
-  margin-left: 1em;
   flex-shrink: 0;
 }
 

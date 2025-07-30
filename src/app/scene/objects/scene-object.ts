@@ -5,10 +5,6 @@ import { Material } from '../../models/material.model';
 import { SceneObjectProperties } from '../object-properties/scene-object-properties';
 import { Rotation } from '../../models/rotation.model';
 
-// TODO:
-// - pyramid
-// - custom meshes
-// - grid
 export abstract class SceneObject {
   public readonly position: Point3d;
   public readonly rotation: Rotation;

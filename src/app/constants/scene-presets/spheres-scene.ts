@@ -2,6 +2,7 @@ import { Point3d } from '../../geometry/point-3d';
 import { Color } from '../../renderer/color';
 import { Sphere } from '../../scene/objects/sphere';
 import { Scene } from '../../scene/scene';
+import { defaultCamera } from '../default-camera';
 
 const colors: Color[] = [
   new Color(255, 0, 128),
@@ -38,4 +39,5 @@ for (let x = 0; x < countX; x++) {
 export const spheresScene = new Scene({
   backgroundColor: new Color(256, 256, 256),
   objects,
+  camera: defaultCamera,
 });
