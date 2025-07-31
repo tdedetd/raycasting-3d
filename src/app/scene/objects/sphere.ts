@@ -11,7 +11,7 @@ export class Sphere extends SceneObject {
 
   constructor(properties: SphereProperties) {
     super(properties);
-    this.radius = properties.radius;
+    this.radius = properties.radius ?? 1;
   }
 
   public getIntersections(ray: CameraRay): Intersection[] {

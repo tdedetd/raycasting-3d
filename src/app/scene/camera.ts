@@ -36,7 +36,7 @@ export class Camera {
   /** Global X when camera has no rotation */
   private canvasCoordX = 0;
 
-  private rotator = new Rotator();
+  private rotator: Rotator;
 
   constructor({ position, rotation, fov, distance, fogStart, resolution }: CameraOptions) {
     this.position = position;
@@ -45,6 +45,7 @@ export class Camera {
     this.distance = distance ?? 100;
     this.fogStart = fogStart ?? 0;
     this.resolution = resolution;
+    this.rotator = new Rotator(this.rotation);
     this.updateCanvasConfig(position);
   }
 
@@ -53,7 +54,7 @@ export class Camera {
     const coordY = (this.canvasPixelSize * x + this.canvasPixelSize / 2) - this.canvasWidth / 2;
     const coordZ =
       (this.canvasPixelSize * (this.resolution.height - y - 1) + this.canvasPixelSize / 2) - this.canvasHeight / 2;
-    const rotatedPoint = this.rotator.rotatePoint(this.rotation, new Point3d(this.canvasCoordX, coordY, coordZ));
+    const rotatedPoint = this.rotator.rotatePoint(new Point3d(this.canvasCoordX, coordY, coordZ));
 
     const line: Line3d = {
       point1: this.position,
@@ -71,6 +72,6 @@ export class Camera {
     this.canvasPixelSize = this.canvasWidth / this.resolution.width;
     this.canvasHeight = this.canvasPixelSize * this.resolution.height;
     this.canvasCoordX = this.position.x + this.distance;
-    this.rotator = new Rotator(position ?? this.position);
+    this.rotator = new Rotator(this.rotation, position ?? this.position);
   }
 }

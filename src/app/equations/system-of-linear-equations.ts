@@ -1,7 +1,7 @@
 import { EquationError } from '../errors/equation-error';
 import { SquareMatrix } from '../matrix/square-matrix';
 import { LinearEquation } from '../models/linear-equation.model';
-import { areElementsEqual } from '../utils/are-elements-equal';
+import { areElementsEqual } from '../utils/array/are-elements-equal';
 
 export class SystemOfLinearEquations {
 

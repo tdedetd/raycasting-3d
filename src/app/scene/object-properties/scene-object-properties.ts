@@ -5,5 +5,5 @@ import { Rotation } from '../../models/rotation.model';
 export interface SceneObjectProperties {
   position: Point3d;
   rotation?: Rotation;
-  material: Material;
+  material?: Material;
 }

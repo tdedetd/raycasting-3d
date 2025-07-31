@@ -68,7 +68,7 @@ export class Ui {
     });
 
     this.form.resolution.width.addEventListener('change', () => {
-      this.form.resolution.height.value = String(Number(this.form.resolution.width.value) * 3 / 4);
+      this.form.resolution.height.value = String(Number(this.form.resolution.width.value) * 9 / 16);
     });
 
     this.handleRender();

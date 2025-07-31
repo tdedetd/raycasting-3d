@@ -6,6 +6,10 @@ import { SceneObjectProperties } from '../object-properties/scene-object-propert
 import { Rotation } from '../../models/rotation.model';
 
 export abstract class SceneObject {
+  private static readonly defaultMaterial: Material = {
+    color: [255, 255, 255],
+  };
+
   public readonly position: Point3d;
   public readonly rotation: Rotation;
   public readonly material: Material;
@@ -13,11 +17,8 @@ export abstract class SceneObject {
   constructor(properties: SceneObjectProperties) {
     this.position = properties.position;
     this.rotation = properties.rotation ?? { x: 0, y: 0, z: 0 };
-    this.material = properties.material;
+    this.material = properties.material ?? SceneObject.defaultMaterial;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public getIntersections(ray: CameraRay): Intersection[] {
-    throw new Error('Method is not implemented');
-  }
+  public abstract getIntersections(ray: CameraRay): Intersection[];
 }

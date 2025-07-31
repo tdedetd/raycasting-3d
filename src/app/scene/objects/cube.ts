@@ -4,11 +4,12 @@ import { Parallelepiped } from './parallelepiped';
 export class Cube extends Parallelepiped {
   constructor(properties: CubeProperties) {
     const { size, ...baseProperties } = properties;
+    const sizeDimensions = size ?? 1;
     super({
       ...baseProperties,
-      sizeX: size,
-      sizeY: size,
-      sizeZ: size,
+      sizeX: sizeDimensions,
+      sizeY: sizeDimensions,
+      sizeZ: sizeDimensions,
     });
   }
 }

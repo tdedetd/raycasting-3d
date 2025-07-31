@@ -3,8 +3,10 @@ import { Matrix } from '../matrix/matrix';
 import { Rotation } from '../models/rotation.model';
 
 export class Rotator {
-
-  constructor(public readonly pivot?: Point3d) {
+  constructor(
+    public readonly rotation: Rotation,
+    public readonly pivot?: Point3d,
+  ) {
     if (!pivot) {
       this.pivot = new Point3d(0, 0, 0);
     }
@@ -13,10 +15,10 @@ export class Rotator {
   /**
    * Return point rotated by specific angles
    */
-  public rotatePoint(rotation: Rotation, point: Point3d): Point3d {
-    const xRad = rotation.x * Math.PI / 180;
-    const yRad = rotation.y * Math.PI / 180;
-    const zRad = rotation.z * Math.PI / 180;
+  public rotatePoint(point: Point3d): Point3d {
+    const xRad = this.rotation.x * Math.PI / 180;
+    const yRad = this.rotation.y * Math.PI / 180;
+    const zRad = this.rotation.z * Math.PI / 180;
     const point0 = point.subtract(this.pivot ?? new Point3d(0, 0, 0));
 
     const rotationMatrixX = new Matrix([
@@ -50,7 +52,7 @@ export class Rotator {
   /**
    * Return points rotated by specific angles
    */
-  public rotatePoints(rotation: Rotation, points: Point3d[]): Point3d[] {
-    return points.map(point => this.rotatePoint(rotation, point));
+  public rotatePoints(points: Point3d[]): Point3d[] {
+    return points.map(point => this.rotatePoint(point));
   }
 }

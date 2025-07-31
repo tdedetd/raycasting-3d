@@ -1,6 +1,6 @@
 import { MatrixError } from '../errors/matrix-error';
 import { MatrixOperationError } from '../errors/matrix-operation-error';
-import { areElementsEqual } from '../utils/are-elements-equal';
+import { areElementsEqual } from '../utils/array/are-elements-equal';
 
 export class Matrix {
   public columns: number;

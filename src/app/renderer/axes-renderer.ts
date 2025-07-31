@@ -8,11 +8,9 @@ import { Color } from '../models/color.model';
 import { Screen } from './screen';
 
 export class AxesRenderer {
-  private rotator: Rotator;
   private screen: Screen;
 
   constructor(canvasId: string) {
-    this.rotator = new Rotator();
     this.screen = new Screen(canvasId, { width: 320, height: 240 }, 'transparent');
   }
 
@@ -26,9 +24,11 @@ export class AxesRenderer {
       y: -camera.rotation.y,
       z: -camera.rotation.z,
     };
-    const xAxisEnd = this.rotator.rotatePoint(inverseRotation, new Point3d(1, 0, 0)).subtract(cameraPosition);
-    const yAxisEnd = this.rotator.rotatePoint(inverseRotation, new Point3d(0, 1, 0)).subtract(cameraPosition);
-    const zAsisEnd = this.rotator.rotatePoint(inverseRotation, new Point3d(0, 0, 1)).subtract(cameraPosition);
+
+    const rotator = new Rotator(inverseRotation);
+    const xAxisEnd = rotator.rotatePoint(new Point3d(1, 0, 0)).subtract(cameraPosition);
+    const yAxisEnd = rotator.rotatePoint(new Point3d(0, 1, 0)).subtract(cameraPosition);
+    const zAsisEnd = rotator.rotatePoint(new Point3d(0, 0, 1)).subtract(cameraPosition);
 
     const xScreenEnd = this.getAxisEndScreenPoint(camDirPoint, xAxisEnd, camera.fov, vfov);
     const yScreenEnd = this.getAxisEndScreenPoint(camDirPoint, yAxisEnd, camera.fov, vfov);
