@@ -19,10 +19,12 @@ export const defaultScene = new Scene({
       size: 5,
     }),
     new Parallelepiped({
+      name: 'blue parallelepiped',
       position: new Point3d(0, -5.4, 1.5),
       rotation: { x: 21, y: -12, z: 15 },
       material: {
         color: [200, 200, 255],
+        opacity: 0.7,
       },
       sizeX: 4,
       sizeY: 1,
@@ -36,10 +38,12 @@ export const defaultScene = new Scene({
       radius: 2,
     }),
     new Prism({
+      name: 'red prism',
       rotation: { x: 90, y: 45, z: -40 },
       position: new Point3d(-3.5, 0, 1.5),
       material: {
         color: [255, 200, 200],
+        opacity: 0.5,
       },
       angles: 3,
       hight: 2,

@@ -5,6 +5,7 @@ import { Renderer } from './renderer';
 
 export class Ui {
   private readonly aspectRatio: number;
+  private readonly axesRenderer: AxesRenderer;
 
   private readonly form = {
     position: {
@@ -47,11 +48,11 @@ export class Ui {
     ];
 
     this.aspectRatio = renderer.camera.resolution.width / renderer.camera.resolution.height;
+    this.axesRenderer = new AxesRenderer('canvas-axes');
   }
 
   public init(): void {
     const camera = this.renderer.camera;
-    const axesRenderer = new AxesRenderer('canvas-axes');
 
     this.form.position.x.value = String(camera.position.x);
     this.form.position.y.value = String(camera.position.y);
@@ -80,8 +81,6 @@ export class Ui {
       camera.fov = Number(this.form.fov.value);
       camera.distance = Number(this.form.distance.value);
       this.handleRender();
-
-      axesRenderer.render(camera);
     });
 
     this.form.interruptRenderButton.addEventListener('click', () => {
@@ -103,7 +102,6 @@ export class Ui {
     });
 
     this.handleRender();
-    axesRenderer.render(camera);
   }
 
   private handleRender(): void {
@@ -113,6 +111,7 @@ export class Ui {
     interruptRenderButton.disabled = false;
     this.form.time.innerText = '-';
 
+    this.axesRenderer.render(this.renderer.camera);
     this.renderer.render({
       width: Number(this.form.resolution.width.value),
       height: Number(this.form.resolution.height.value),

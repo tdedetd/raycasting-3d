@@ -2,11 +2,12 @@ import { SystemOfLinearEquations3eq3Var } from '../equations/system-of-linear-eq
 import { Point3d } from '../geometry/point-3d';
 import { Intersection } from '../models/intersection.model';
 import { getLength } from '../utils/get-length';
-import { CameraRay } from '../models/camera-ray.model';
+import { Ray } from '../models/ray.model';
 import { Mesh } from './mesh';
+import { SceneObject } from './objects/scene-object';
 
 export class MeshIntersectionDetector {
-  public static getIntersections(ray: CameraRay, meshes: Mesh[]): Intersection[] {
+  public static getIntersections(ray: Ray, meshes: Mesh[], object: SceneObject): Intersection[] {
 
     const intersections: Intersection[] = [];
 
@@ -30,7 +31,8 @@ export class MeshIntersectionDetector {
         intersections.push({
           material: mesh.material,
           point,
-          distance: getLength(point, ray.line.point1),
+          distance: getLength(ray.line.point1, point),
+          object,
         });
       }
     });

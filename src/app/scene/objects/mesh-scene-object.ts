@@ -1,4 +1,4 @@
-import { CameraRay } from '../../models/camera-ray.model';
+import { Ray } from '../../models/ray.model';
 import { Intersection } from '../../models/intersection.model';
 import { Mesh } from '../mesh';
 import { MeshIntersectionDetector } from '../mesh-intersection-detector';
@@ -13,8 +13,8 @@ export abstract class MeshSceneObject extends SceneObject {
     this.meshes = this.getMeshes(properties);
   }
 
-  public getIntersections(ray: CameraRay): Intersection[] {
-    return MeshIntersectionDetector.getIntersections(ray, this.meshes);
+  public getIntersections(ray: Ray): Intersection[] {
+    return MeshIntersectionDetector.getIntersections(ray, this.meshes, this);
   }
 
   protected abstract getMeshes(properties: SceneObjectProperties): Mesh[];

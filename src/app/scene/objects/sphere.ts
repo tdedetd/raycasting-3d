@@ -2,7 +2,7 @@ import { Point3d } from '../../geometry/point-3d';
 import { Intersection } from '../../models/intersection.model';
 import { getLength } from '../../utils/get-length';
 import { solveQuadraticEquation } from '../../utils/solve-quadratic-equation';
-import { CameraRay } from '../../models/camera-ray.model';
+import { Ray } from '../../models/ray.model';
 import { SphereProperties } from '../object-properties/sphere-properties';
 import { SceneObject } from './scene-object';
 
@@ -14,7 +14,7 @@ export class Sphere extends SceneObject {
     this.radius = properties.radius ?? 1;
   }
 
-  public getIntersections(ray: CameraRay): Intersection[] {
+  public getIntersections(ray: Ray): Intersection[] {
     const p1 = ray.line.point1;
     const p2 = ray.line.point2;
     const v = p2.subtract(p1);
@@ -39,6 +39,7 @@ export class Sphere extends SceneObject {
         material: this.material,
         point,
         distance: getLength(ray.line.point1, point),
+        object: this,
       };
     });
   }
