@@ -6,8 +6,8 @@ export const defaultCamera = new Camera({
   rotation: { x: 0, y: 11, z: 17 },
   distance: 17,
   resolution: {
-    width: 480,
-    height: 280,
+    width: 384,
+    height: 216,
   },
   fov: 90,
 });

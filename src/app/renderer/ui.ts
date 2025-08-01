@@ -4,6 +4,8 @@ import { AxesRenderer } from './axes-renderer';
 import { Renderer } from './renderer';
 
 export class Ui {
+  private readonly aspectRatio: number;
+
   private readonly form = {
     position: {
       x: getElement<HTMLInputElement>('input-position-x'),
@@ -17,16 +19,35 @@ export class Ui {
     },
     fov: getElement<HTMLInputElement>('input-fov'),
     distance: getElement<HTMLInputElement>('input-distance'),
-    time: getElement<HTMLDivElement>('div-time'),
     resolution: {
       width: getElement<HTMLInputElement>('input-width'),
       height: getElement<HTMLInputElement>('input-height'),
     },
     renderButton: getElement<HTMLButtonElement>('button-render'),
+
+    time: getElement<HTMLDivElement>('div-time'),
     interruptRenderButton: getElement<HTMLButtonElement>('button-interrupt'),
   };
 
-  constructor(private readonly renderer: Renderer) { }
+  private disabledElementsDuringRender: (HTMLInputElement | HTMLButtonElement)[];
+
+  constructor(private readonly renderer: Renderer) {
+    this.disabledElementsDuringRender = [
+      this.form.position.x,
+      this.form.position.y,
+      this.form.position.z,
+      this.form.rotation.x,
+      this.form.rotation.y,
+      this.form.rotation.z,
+      this.form.fov,
+      this.form.distance,
+      this.form.resolution.width,
+      this.form.resolution.height,
+      this.form.renderButton,
+    ];
+
+    this.aspectRatio = renderer.camera.resolution.width / renderer.camera.resolution.height;
+  }
 
   public init(): void {
     const camera = this.renderer.camera;
@@ -67,8 +88,18 @@ export class Ui {
       this.renderer.interrupt();
     });
 
-    this.form.resolution.width.addEventListener('change', () => {
-      this.form.resolution.height.value = String(Number(this.form.resolution.width.value) * 9 / 16);
+    this.form.resolution.width.addEventListener('change', (event: Event) => {
+      if (event.target instanceof HTMLInputElement) {
+        const newHight = Math.round(Number(event.target.value) / this.aspectRatio);
+        this.form.resolution.height.value = String(newHight);
+      }
+    });
+
+    this.form.resolution.height.addEventListener('change', (event: Event) => {
+      if (event.target instanceof HTMLInputElement) {
+        const newWidth = Math.round(Number(event.target.value) * this.aspectRatio);
+        this.form.resolution.width.value = String(newWidth);
+      }
     });
 
     this.handleRender();
@@ -76,10 +107,9 @@ export class Ui {
   }
 
   private handleRender(): void {
-    const renderButton = this.form.renderButton;
     const interruptRenderButton = this.form.interruptRenderButton;
 
-    renderButton.disabled = true;
+    this.setDisabledFor(this.disabledElementsDuringRender, true);
     interruptRenderButton.disabled = false;
     this.form.time.innerText = '-';
 
@@ -88,10 +118,16 @@ export class Ui {
       height: Number(this.form.resolution.height.value),
     }).then((time) => {
       this.form.time.innerText = (time / 1000).toFixed(3) + ' s';
-      renderButton.disabled = false;
+      this.setDisabledFor(this.disabledElementsDuringRender, false);
       interruptRenderButton.disabled = true;
     }).catch(() => {
       throw new Error('жопа');
+    });
+  }
+
+  private setDisabledFor(elements: typeof this.disabledElementsDuringRender, disabled: boolean): void {
+    elements.forEach((element) => {
+      element.disabled = disabled;
     });
   }
 }
