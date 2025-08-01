@@ -115,12 +115,13 @@ export class Ui {
     this.renderer.render({
       width: Number(this.form.resolution.width.value),
       height: Number(this.form.resolution.height.value),
-    }).then((time) => {
-      this.form.time.innerText = (time / 1000).toFixed(3) + ' s';
+    }).then((summary) => {
+      // eslint-disable-next-line no-console
+      console.info(summary);
+
+      this.form.time.innerText = (summary.time / 1000).toFixed(3) + ' s';
       this.setDisabledFor(this.disabledElementsDuringRender, false);
       interruptRenderButton.disabled = true;
-    }).catch(() => {
-      throw new Error('жопа');
     });
   }
 

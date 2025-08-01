@@ -11,10 +11,19 @@ import { generateRay } from '../utils/generate-ray';
 import { getLength } from '../utils/get-length';
 import { SceneObject } from '../scene/objects/scene-object';
 import { removeElementFrom } from '../utils/array/remove-element-from';
+import { RendererProcessingInfo } from './renderer-processing-info';
+
+interface RenderSummary {
+  time: number;
+  primaryRays: number;
+  totalRays: number;
+  transparentIntersections: number;
+  progress: number;
+  status: 'success' | 'interrupted';
+}
 
 export class Renderer {
-  private startRenderTimestamp: number | null = null;
-  private interruptConfirmed = false;
+  private processingInfo = new RendererProcessingInfo();
 
   constructor(
     private readonly scene: Scene,
@@ -28,53 +37,60 @@ export class Renderer {
   /**
    * @returns time of rendering in miliseconds
    */
-  public render(resolution: Resolution): Promise<number> {
+  public render(resolution: Resolution): Promise<RenderSummary> {
     const screen = new Screen(this.canvasId, resolution);
     this.camera.resolution = resolution;
     this.camera.updateCanvasConfig();
 
-    this.startRenderTimestamp = performance.now();
+    this.processingInfo = new RendererProcessingInfo();
     return new Promise((resolve, reject) => {
       this.renderPixel(resolve, reject, resolution, screen, 0);
     });
   }
 
   public interrupt(): void {
-    this.interruptConfirmed = true;
+    this.processingInfo.interruptConfirmed = true;
   }
 
   private renderPixel(
-    resolve: (value: number | PromiseLike<number>) => void,
+    resolve: (value: RenderSummary | PromiseLike<RenderSummary>) => void,
     reject: (reason?: unknown) => void,
     resolution: Resolution,
     screen: Screen,
-    y: number,
+    yStart: number,
   ): void {
     setTimeout(() => {
+      const timestamp = performance.now();
+
       for (let x = 0; x < resolution.width; x++) {
-        const primaryRay = this.camera.generateRay(x, y);
+        const primaryRay = this.camera.generateRay(x, yStart);
+        this.processingInfo.primaryRays++;
         const color = this.castRay(primaryRay, this.scene.getObjects());
-        screen.drawPixel(x, y, color);
+        screen.drawPixel(x, yStart, color);
       }
 
-      const newY = y + 1;
+      const newYStart = yStart + 1;
 
-      if (!this.interruptConfirmed && newY !== resolution.height) {
-        this.renderPixel(resolve, reject, resolution, screen, newY);
+      if (!this.processingInfo.interruptConfirmed && newYStart !== resolution.height) {
+        this.renderPixel(resolve, reject, resolution, screen, newYStart);
+        this.processingInfo.time += performance.now() - timestamp;
       } else {
         Counters.log();
-        if (this.startRenderTimestamp !== null) {
-          resolve(performance.now() - this.startRenderTimestamp);
-        } else {
-          reject('no value for startRenderTimestamp');
-        }
-        this.startRenderTimestamp = null;
-        this.interruptConfirmed = false;
+        this.processingInfo.time += performance.now() - timestamp;
+        resolve({
+          time: this.processingInfo.time,
+          primaryRays: this.processingInfo.primaryRays,
+          totalRays: this.processingInfo.totalRays,
+          transparentIntersections: this.processingInfo.transparentIntersections,
+          progress: newYStart / this.camera.resolution.height,
+          status: newYStart === this.camera.resolution.height ? 'success' : 'interrupted',
+        });
       }
     });
   }
 
   private castRay(ray: Ray, objects: SceneObject[]): Color {
+    this.processingInfo.totalRays++;
     let closestIntersection: Intersection | null = null;
 
     objects.forEach(obj => {
@@ -106,6 +122,7 @@ export class Renderer {
 
     const opacity = intersection.material.opacity;
     if (typeof opacity !== 'undefined' && opacity !== 1) {
+      this.processingInfo.transparentIntersections++;
       const newRay = generateRay(
         intersection.point,
         ray.line.point2,
