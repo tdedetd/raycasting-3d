@@ -44,7 +44,7 @@ export class Renderer {
 
     this.processingInfo = new RendererProcessingInfo();
     return new Promise((resolve, reject) => {
-      this.renderPixel(resolve, reject, resolution, screen, 0);
+      this.runTask(resolve, reject, resolution, screen, 0);
     });
   }
 
@@ -52,7 +52,7 @@ export class Renderer {
     this.processingInfo.interruptConfirmed = true;
   }
 
-  private renderPixel(
+  private runTask(
     resolve: (value: RenderSummary | PromiseLike<RenderSummary>) => void,
     reject: (reason?: unknown) => void,
     resolution: Resolution,
@@ -72,7 +72,7 @@ export class Renderer {
       const newYStart = yStart + 1;
 
       if (!this.processingInfo.interruptConfirmed && newYStart !== resolution.height) {
-        this.renderPixel(resolve, reject, resolution, screen, newYStart);
+        this.runTask(resolve, reject, resolution, screen, newYStart);
         this.processingInfo.time += performance.now() - timestamp;
       } else {
         Counters.log();
