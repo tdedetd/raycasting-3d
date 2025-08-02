@@ -9,6 +9,8 @@ interface CameraOptions {
   position: Point3d;
   rotation?: Rotation;
   fov?: number;
+
+  /** Must be bigger then 0 */
   distance?: number;
   fogStart?: number;
   resolution: Resolution;
@@ -44,6 +46,9 @@ export class Camera {
     this.fogStart = fogStart ?? 0;
     this.resolution = resolution;
     this.rotator = new Rotator(this.rotation);
+
+    this.validateDistance();
+
     this.updateCanvasConfig(position);
   }
 
@@ -62,5 +67,11 @@ export class Camera {
     this.canvasHeight = this.canvasPixelSize * this.resolution.height;
     this.canvasCoordX = this.position.x + this.distance;
     this.rotator = new Rotator(this.rotation, position ?? this.position);
+  }
+
+  private validateDistance(): void {
+    if (this.distance <= 0) {
+      throw new Error(`camera distance less or equals 0 (${this.distance})`);
+    }
   }
 }

@@ -26,6 +26,7 @@ export abstract class SceneObject {
     this.material = properties.material ?? SceneObject.defaultMaterial;
 
     this.validateOpacity();
+    this.validateColor();
   }
 
   public abstract getIntersections(ray: Ray): Intersection[];
@@ -40,6 +41,17 @@ export abstract class SceneObject {
     const opacity = this.material.opacity;
     if (typeof opacity !== 'undefined' && (opacity < 0 || opacity > 1)) {
       throw new Error(`opacity is not in interval [0, 1]. Current value - ${opacity}`);
+    }
+  }
+
+  private validateColor(): void {
+    const color = this.material.color;
+    if (
+      color[0] < 0 || color[0] > 255 ||
+      color[1] < 0 || color[1] > 255 ||
+      color[2] < 0 || color[2] > 255
+    ) {
+      throw new Error(`incorrect value of the color - [${color[0]}, ${color[1]}, ${color[2]}]`);
     }
   }
 }

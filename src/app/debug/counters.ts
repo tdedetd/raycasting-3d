@@ -17,7 +17,7 @@ export class Counters {
       }, {});
 
     // eslint-disable-next-line no-console
-    console.log(formattedCounters);
+    console.info(formattedCounters);
   }
 
   public static reset(): void {

@@ -3,7 +3,6 @@ import { Screen } from './screen';
 import { Intersection } from '../models/intersection.model';
 import { Scene } from '../scene/scene';
 import { Camera } from '../scene/camera';
-import { Counters } from '../debug/counters';
 import { Ray } from '../models/ray.model';
 import { Color } from '../models/color.model';
 import { mixColors } from '../utils/mix-colors';
@@ -12,6 +11,7 @@ import { getLength } from '../utils/get-length';
 import { SceneObject } from '../scene/objects/scene-object';
 import { removeElementFrom } from '../utils/array/remove-element-from';
 import { RendererProcessingInfo } from './renderer-processing-info';
+import { RenderMode } from '../models/render-mode.model';
 
 interface RenderSummary {
   time: number;
@@ -34,17 +34,21 @@ export class Renderer {
     return this.scene.camera;
   }
 
+  private get resolution(): Resolution {
+    return this.camera.resolution;
+  }
+
   /**
    * @returns time of rendering in miliseconds
    */
-  public render(resolution: Resolution): Promise<RenderSummary> {
-    const screen = new Screen(this.canvasId, resolution);
-    this.camera.resolution = resolution;
+  public render(mode: RenderMode = 'main'): Promise<RenderSummary> {
+    const screen = new Screen(this.canvasId, this.resolution);
     this.camera.updateCanvasConfig();
 
     this.processingInfo = new RendererProcessingInfo();
+    this.processingInfo.mode = mode;
     return new Promise((resolve, reject) => {
-      this.runTask(resolve, reject, resolution, screen, 0);
+      this.runTask(resolve, reject, this.resolution, screen, 0);
     });
   }
 
@@ -75,15 +79,14 @@ export class Renderer {
         this.runTask(resolve, reject, resolution, screen, newYStart);
         this.processingInfo.time += performance.now() - timestamp;
       } else {
-        Counters.log();
         this.processingInfo.time += performance.now() - timestamp;
         resolve({
           time: this.processingInfo.time,
           primaryRays: this.processingInfo.primaryRays,
           totalRays: this.processingInfo.totalRays,
           transparentIntersections: this.processingInfo.transparentIntersections,
-          progress: newYStart / this.camera.resolution.height,
-          status: newYStart === this.camera.resolution.height ? 'success' : 'interrupted',
+          progress: newYStart / this.resolution.height,
+          status: newYStart === this.resolution.height ? 'success' : 'interrupted',
         });
       }
     });
@@ -91,7 +94,7 @@ export class Renderer {
 
   private castRay(ray: Ray, objects: SceneObject[]): Color {
     this.processingInfo.totalRays++;
-    let closestIntersection: Intersection | null = null;
+    let closestIntersection: Intersection | undefined;
 
     objects.forEach(obj => {
       const intersections = obj.getIntersections(ray);
@@ -101,6 +104,10 @@ export class Renderer {
         }
       });
     });
+
+    if (this.processingInfo.mode === 'depthMap') {
+      return this.getDephColor(closestIntersection);
+    }
 
     return closestIntersection
       ? this.handleIntersection(closestIntersection, ray, objects)
@@ -143,5 +150,19 @@ export class Renderer {
     }
 
     return (distance - this.camera.fogStart) / (this.camera.distance - this.camera.fogStart);
+  }
+
+  private getDephColor(intersection?: Intersection): Color {
+    const colorFrom: Color = [255, 255, 255];
+    const colorTo: Color = [0, 0, 0];
+
+    if (intersection) {
+      const distanceToCamera = getLength(this.camera.position, intersection.point);
+      return distanceToCamera > this.camera.distance
+        ? [255, 0, 0]
+        : mixColors(colorFrom, colorTo, distanceToCamera / this.camera.distance);
+    } else {
+      return colorTo;
+    }
   }
 }

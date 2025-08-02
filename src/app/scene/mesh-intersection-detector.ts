@@ -22,9 +22,8 @@ export class MeshIntersectionDetector {
       }
 
       const inInterval = (
-        point.x > ray.line.point1.x &&
-        point.x < ray.line.point2.x || point.x > ray.line.point2.x &&
-        point.x < ray.line.point1.x
+        point.x >= ray.line.point1.x && point.x <= ray.line.point2.x ||
+        point.x >= ray.line.point2.x && point.x <= ray.line.point1.x
       );
 
       if (inInterval) {
