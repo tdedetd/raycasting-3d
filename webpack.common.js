@@ -9,6 +9,7 @@ const isProduction = process.env.NODE_ENV === 'production';
 
 module.exports = {
   context: path.resolve(__dirname, 'src'),
+  devtool: 'source-map',
   entry: {
     main: './app/index.ts',
     styles: './style.scss'
