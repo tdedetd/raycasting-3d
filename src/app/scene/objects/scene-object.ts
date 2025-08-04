@@ -25,8 +25,8 @@ export abstract class SceneObject {
     this.rotation = properties.rotation ?? { x: 0, y: 0, z: 0 };
     this.material = properties.material ?? SceneObject.defaultMaterial;
 
-    this.validateOpacity();
     this.validateColor();
+    this.validateOpacity();
   }
 
   public abstract getIntersections(ray: Ray): Intersection[];

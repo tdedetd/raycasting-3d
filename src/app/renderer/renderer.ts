@@ -67,7 +67,7 @@ export class Renderer {
       const timestamp = performance.now();
 
       for (let x = 0; x < resolution.width; x++) {
-        const primaryRay = this.camera.generateRay(x, yStart);
+        const primaryRay = this.camera.generateRayV2(x, yStart);
         this.processingInfo.primaryRays++;
         const color = this.castRay(primaryRay, this.scene.getObjects());
         screen.drawPixel(x, yStart, color);

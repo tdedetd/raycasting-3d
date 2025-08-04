@@ -1,14 +1,23 @@
 import { Point3d } from '../../geometry/point-3d';
+import { Camera } from '../../scene/camera';
 import { Cube } from '../../scene/objects/cube';
 import { Parallelepiped } from '../../scene/objects/parallelepiped';
 import { Plane } from '../../scene/objects/plane';
 import { Prism } from '../../scene/objects/prism';
 import { Sphere } from '../../scene/objects/sphere';
 import { Scene } from '../../scene/scene';
-import { defaultCamera } from '../default-camera';
 
 export const defaultScene = new Scene({
-  camera: defaultCamera,
+  camera: new Camera({
+    position: new Point3d(-19, -11, 6),
+    rotation: { x: 0, y: 10, z: 31 },
+    resolution: {
+      width: 384,
+      height: 216,
+    },
+    distance: 34,
+    fov: 40,
+  }),
   objects: [
     new Cube({
       position: new Point3d(0, -1, 2.5),
@@ -31,7 +40,7 @@ export const defaultScene = new Scene({
       sizeZ: 2,
     }),
     new Sphere({
-      position: new Point3d(-2, 5, 1.5),
+      position: new Point3d(-2, 5, 2),
       material: {
         color: [255, 255, 255],
       },
@@ -39,11 +48,11 @@ export const defaultScene = new Scene({
     }),
     new Prism({
       name: 'red prism',
-      rotation: { x: 90, y: 45, z: -40 },
-      position: new Point3d(-3.5, 0, 1.5),
+      position: new Point3d(-4.5, 0, 1),
+      rotation: { x: 0, y: 70, z: 90 },
       material: {
         color: [255, 200, 200],
-        opacity: 0.5,
+        opacity: 0.8,
       },
       angles: 3,
       hight: 2,

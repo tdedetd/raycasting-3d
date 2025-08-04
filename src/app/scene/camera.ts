@@ -4,6 +4,10 @@ import { Rotator } from '../renderer/rotator';
 import { Ray } from '../models/ray.model';
 import { Rotation } from '../models/rotation.model';
 import { generateRay } from '../utils/generate-ray';
+import { PointSpherical } from '../geometry/point-spherical';
+import { getVerticalFov } from '../utils/angle/get-vertical-fov';
+import { toDegrees } from '../utils/angle/to-degrees';
+import { toRadians } from '../utils/angle/to-radians';
 
 interface CameraOptions {
   position: Point3d;
@@ -24,16 +28,32 @@ export class Camera {
   public fogStart: number;
   public resolution: Resolution;
 
-  /** Global width of canvas on scene */
+  /**
+   * Global width of canvas on scene
+   * 
+   * @deprecated
+   */
   private canvasWidth = 0;
 
-  /** Global height of canvas on scene */
+  /**
+   * Global height of canvas on scene
+   * 
+   * @deprecated
+   */
   private canvasHeight = 0;
 
-  /** Global size of 1 pixel on scene */
+  /**
+   * Global size of 1 pixel on scene
+   * 
+   * @deprecated
+   */
   private canvasPixelSize = 0;
 
-  /** Global X when camera has no rotation */
+  /**
+   * Global X when camera has no rotation
+   * 
+   * @deprecated
+   */
   private canvasCoordX = 0;
 
   private rotator: Rotator;
@@ -49,7 +69,7 @@ export class Camera {
 
     this.validateDistance();
 
-    this.updateCanvasConfig(position);
+    this.updateCanvasConfig();
   }
 
   public generateRay(x: number, y: number): Ray {
@@ -61,12 +81,38 @@ export class Camera {
     return generateRay(this.position, rotatedPoint);
   }
 
-  public updateCanvasConfig(position?: Point3d): void {
+  // With correct ray lenth, but with fish eye
+  public generateRayV2(x: number, y: number): Ray {
+    const vFov = getVerticalFov(this.fov, this.resolution.width, this.resolution.height);
+    const projectionWidth = 2 * this.distance * Math.tan(toRadians(this.fov / 2));
+    const projectionHeight = 2 * this.distance * Math.tan(toRadians(vFov / 2));
+    const canvasPixelSizeWidth = projectionWidth / (this.resolution.width - 1);
+    const canvasPixelSizHeight = projectionHeight / (this.resolution.height - 1);
+
+    const coordY = canvasPixelSizeWidth * x - projectionWidth / 2;
+    const coordZ = canvasPixelSizHeight * y - projectionHeight / 2;
+
+    const horizontalAngleRad = Math.atan(coordY / this.distance);
+    const verticalAngleRad = Math.atan(coordZ / this.distance);
+
+    const endOfRayPoint = new PointSpherical(
+      this.distance,
+      toDegrees(verticalAngleRad),
+      toDegrees(horizontalAngleRad)
+    ).toCartesian(this.position);
+
+    return generateRay(
+      this.position,
+      this.rotator.rotatePoint(endOfRayPoint)
+    );
+  }
+
+  public updateCanvasConfig(): void {
     this.canvasWidth = 2 * this.distance * Math.tan(this.fov / 2 * Math.PI / 180);
     this.canvasPixelSize = this.canvasWidth / this.resolution.width;
     this.canvasHeight = this.canvasPixelSize * this.resolution.height;
     this.canvasCoordX = this.position.x + this.distance;
-    this.rotator = new Rotator(this.rotation, position ?? this.position);
+    this.rotator = new Rotator(this.rotation, this.position);
   }
 
   private validateDistance(): void {
