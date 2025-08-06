@@ -118,6 +118,7 @@ export class Ui {
 
     this.axesRenderer.render(this.renderer.camera);
     this.renderer.render().then((summary) => {
+
       // eslint-disable-next-line no-console
       console.info(summary);
       Counters.log();

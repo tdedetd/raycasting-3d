@@ -1,13 +1,13 @@
 import { Point3d } from '../../geometry/point-3d';
 import { Color } from '../../models/color.model';
+import { Camera } from '../../scene/camera';
 import { Sphere } from '../../scene/objects/sphere';
 import { Scene } from '../../scene/scene';
-import { defaultCamera } from '../default-camera';
 
 const colors: Color[] = [
   [255, 0, 128],
   [255, 128, 0],
-  [255, 0, 256],
+  [255, 0, 255],
   [255, 0, 0],
 ];
 
@@ -15,7 +15,7 @@ const countX = 7;
 const countY = 7;
 const countZ = 7;
 
-const spacing = 3;
+const spacing = 3.4;
 
 const objects: Sphere[] = [];
 
@@ -39,5 +39,14 @@ for (let x = 0; x < countX; x++) {
 export const spheresScene = new Scene({
   backgroundColor: [255, 255, 255],
   objects,
-  camera: defaultCamera,
+  camera: new Camera({
+    position: new Point3d(-14, -6, 5),
+    rotation: { x: 0, y: 12, z: 14 },
+    distance: 40,
+    resolution: {
+      width: 384,
+      height: 216,
+    },
+    fov: 40,
+  }),
 });

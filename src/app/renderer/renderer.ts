@@ -12,6 +12,7 @@ import { SceneObject } from '../scene/objects/scene-object';
 import { removeElementFrom } from '../utils/array/remove-element-from';
 import { RendererProcessingInfo } from './renderer-processing-info';
 import { RenderMode } from '../models/render-mode.model';
+import { Point } from '../models/point.model';
 
 interface RenderSummary {
   time: number;
@@ -23,12 +24,14 @@ interface RenderSummary {
 }
 
 export class Renderer {
-  private processingInfo = new RendererProcessingInfo();
+  private processingInfo: RendererProcessingInfo;
 
   constructor(
     private readonly scene: Scene,
     private readonly canvasId: string,
-  ) {}
+  ) {
+    this.processingInfo = new RendererProcessingInfo(this.resolution);
+  }
 
   public get camera(): Camera {
     return this.scene.camera;
@@ -41,14 +44,25 @@ export class Renderer {
   /**
    * @returns time of rendering in miliseconds
    */
-  public render(mode: RenderMode = 'main'): Promise<RenderSummary> {
+  public render(mode: RenderMode = 'main', progressive = false): Promise<RenderSummary> {
     const screen = new Screen(this.canvasId, this.resolution);
     this.camera.updateCanvasConfig();
 
-    this.processingInfo = new RendererProcessingInfo();
-    this.processingInfo.mode = mode;
+    this.processingInfo = new RendererProcessingInfo(this.resolution, mode);
     return new Promise((resolve, reject) => {
-      this.runTask(resolve, reject, this.resolution, screen, 0);
+      if (progressive) {
+        this.runTaskProgressive(
+          resolve,
+          reject,
+          screen,
+          { x: 0, y: 0 },
+          this.resolution.width,
+          this.resolution.height,
+          true
+        );
+      } else {
+        this.runTask(resolve, reject, this.resolution, screen, 0);
+      }
     });
   }
 
@@ -75,7 +89,7 @@ export class Renderer {
 
       const newYStart = yStart + 1;
 
-      if (!this.processingInfo.interruptConfirmed && newYStart !== resolution.height) {
+      if (!this.processingInfo.interruptConfirmed && this.processingInfo.primaryRays < this.processingInfo.totalPixels) {
         this.runTask(resolve, reject, resolution, screen, newYStart);
         this.processingInfo.time += performance.now() - timestamp;
       } else {
@@ -85,8 +99,72 @@ export class Renderer {
           primaryRays: this.processingInfo.primaryRays,
           totalRays: this.processingInfo.totalRays,
           transparentIntersections: this.processingInfo.transparentIntersections,
-          progress: newYStart / this.resolution.height,
-          status: newYStart === this.resolution.height ? 'success' : 'interrupted',
+          progress: this.processingInfo.primaryRays / this.processingInfo.totalPixels,
+          status: this.processingInfo.primaryRays >= this.processingInfo.totalPixels ? 'success' : 'interrupted',
+        });
+      }
+    });
+  }
+
+  private runTaskProgressive(
+    resolve: (value: RenderSummary | PromiseLike<RenderSummary>) => void,
+    reject: (reason?: unknown) => void,
+    screen: Screen,
+    startPoint: Point,
+    width: number,
+    hegiht: number,
+    initial = false
+  ): void {
+    setTimeout(() => {
+      const timestamp = performance.now();
+
+      const stepX = Math.round(width / 10);
+      const stepY = Math.round(hegiht / 10);
+
+      if (stepX < 2 || stepY < 2) {
+        for (let y = startPoint.y; y < startPoint.y + hegiht; y++) {
+          for (let x = startPoint.x; x < startPoint.x + width; x++) {
+            const primaryRay = this.camera.generateRayV2(x, y);
+            this.processingInfo.primaryRays++;
+            const color = this.castRay(primaryRay, this.scene.getObjects());
+            screen.drawPixel(x, y, color);
+          }
+        }
+      } else {
+        for (let y = startPoint.y; y < startPoint.y + hegiht; y += stepY) {
+          for (let x = startPoint.x; x < startPoint.x + width; x += stepX) {
+            if (initial || x !== startPoint.x || y !== startPoint.y) {
+              const primaryRay = this.camera.generateRayV2(x, y);
+              this.processingInfo.primaryRays++;
+              const color = this.castRay(primaryRay, this.scene.getObjects());
+
+              const newWidth = Math.min(stepX, Math.abs(x + stepX - width));
+              const newHeight = Math.min(stepY, Math.abs(y + stepY - hegiht));
+              screen.drawRectangle(x, y, newWidth, newHeight, color);
+
+              this.runTaskProgressive(
+                resolve,
+                reject,
+                screen,
+                { x, y },
+                newWidth,
+                newHeight
+              );
+            }
+          }
+        }
+      }
+
+      this.processingInfo.time += performance.now() - timestamp;
+      const renderingIsDone = this.processingInfo.primaryRays >= this.processingInfo.totalPixels;
+      if (this.processingInfo.interruptConfirmed || renderingIsDone) {
+        resolve({
+          time: this.processingInfo.time,
+          primaryRays: this.processingInfo.primaryRays,
+          totalRays: this.processingInfo.totalRays,
+          transparentIntersections: this.processingInfo.transparentIntersections,
+          progress: this.processingInfo.primaryRays / this.processingInfo.totalPixels,
+          status: renderingIsDone ? 'success' : 'interrupted',
         });
       }
     });

@@ -36,8 +36,12 @@ export class Screen {
   }
 
   public drawPixel(x: number, y: number, color: Color): void {
+    this.drawRectangle(x, y, 1, 1, color);
+  }
+
+  public drawRectangle(x: number, y: number, width: number, height: number, color: Color): void {
     this.context.fillStyle = this.colorToString(color);
-    this.context.fillRect(x, y, 1, 1);
+    this.context.fillRect(x, y, width, height);
   }
 
   private getContext(element: HTMLCanvasElement): CanvasRenderingContext2D {
