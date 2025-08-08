@@ -1,1 +1,1 @@
-export type RenderMode = 'main' | 'depthMap';
+export type RenderMode = 'line' | 'progressive';

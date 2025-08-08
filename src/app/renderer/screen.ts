@@ -6,8 +6,8 @@ import { Color } from '../models/color.model';
 
 export class Screen {
   public readonly resolution: Resolution;
+  public readonly canvasEl: HTMLCanvasElement;
   private readonly background: string;
-  private readonly canvasEl: HTMLCanvasElement;
   private readonly context: CanvasRenderingContext2D;
 
   constructor(id: string, resolution: Resolution, background: string = 'black') {

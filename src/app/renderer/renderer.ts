@@ -11,8 +11,8 @@ import { getLength } from '../utils/get-length';
 import { SceneObject } from '../scene/objects/scene-object';
 import { removeElementFrom } from '../utils/array/remove-element-from';
 import { RendererProcessingInfo } from './renderer-processing-info';
-import { RenderMode } from '../models/render-mode.model';
 import { Point } from '../models/point.model';
+import { RenderProperties } from '../models/render-properties.model';
 
 interface RenderSummary {
   time: number;
@@ -30,7 +30,7 @@ export class Renderer {
     private readonly scene: Scene,
     private readonly canvasId: string,
   ) {
-    this.processingInfo = new RendererProcessingInfo(this.resolution);
+    this.processingInfo = this.getProcessingInfo();
   }
 
   public get camera(): Camera {
@@ -41,27 +41,32 @@ export class Renderer {
     return this.camera.resolution;
   }
 
+  private get properties(): RenderProperties {
+    return this.processingInfo.properties;
+  }
+
+  private get screen(): Screen {
+    return this.processingInfo.screen;
+  }
+
   /**
    * @returns time of rendering in miliseconds
    */
-  public render(mode: RenderMode = 'main', progressive = false): Promise<RenderSummary> {
-    const screen = new Screen(this.canvasId, this.resolution);
+  public render(properties?: Partial<RenderProperties>): Promise<RenderSummary> {
     this.camera.updateCanvasConfig();
 
-    this.processingInfo = new RendererProcessingInfo(this.resolution, mode);
-    return new Promise((resolve, reject) => {
-      if (progressive) {
+    this.processingInfo = this.getProcessingInfo(properties);
+    return new Promise((resolve) => {
+      if (this.properties.renderMode === 'progressive') {
         this.runTaskProgressive(
           resolve,
-          reject,
-          screen,
           { x: 0, y: 0 },
           this.resolution.width,
           this.resolution.height,
           true
         );
       } else {
-        this.runTask(resolve, reject, this.resolution, screen, 0);
+        this.runTask(resolve, this.resolution, 0);
       }
     });
   }
@@ -72,25 +77,21 @@ export class Renderer {
 
   private runTask(
     resolve: (value: RenderSummary | PromiseLike<RenderSummary>) => void,
-    reject: (reason?: unknown) => void,
     resolution: Resolution,
-    screen: Screen,
     yStart: number,
   ): void {
     setTimeout(() => {
       const timestamp = performance.now();
 
       for (let x = 0; x < resolution.width; x++) {
-        const primaryRay = this.camera.generateRayV2(x, yStart);
-        this.processingInfo.primaryRays++;
-        const color = this.castRay(primaryRay, this.scene.getObjects());
-        screen.drawPixel(x, yStart, color);
+        const color = this.getColor(x, yStart);
+        this.screen.drawPixel(x, yStart, color);
       }
 
       const newYStart = yStart + 1;
 
       if (!this.processingInfo.interruptConfirmed && this.processingInfo.primaryRays < this.processingInfo.totalPixels) {
-        this.runTask(resolve, reject, resolution, screen, newYStart);
+        this.runTask(resolve, resolution, newYStart);
         this.processingInfo.time += performance.now() - timestamp;
       } else {
         this.processingInfo.time += performance.now() - timestamp;
@@ -108,8 +109,6 @@ export class Renderer {
 
   private runTaskProgressive(
     resolve: (value: RenderSummary | PromiseLike<RenderSummary>) => void,
-    reject: (reason?: unknown) => void,
-    screen: Screen,
     startPoint: Point,
     width: number,
     hegiht: number,
@@ -124,28 +123,21 @@ export class Renderer {
       if (stepX < 2 || stepY < 2) {
         for (let y = startPoint.y; y < startPoint.y + hegiht; y++) {
           for (let x = startPoint.x; x < startPoint.x + width; x++) {
-            const primaryRay = this.camera.generateRayV2(x, y);
-            this.processingInfo.primaryRays++;
-            const color = this.castRay(primaryRay, this.scene.getObjects());
-            screen.drawPixel(x, y, color);
+            const color = this.getColor(x, y);
+            this.screen.drawPixel(x, y, color);
           }
         }
       } else {
         for (let y = startPoint.y; y < startPoint.y + hegiht; y += stepY) {
           for (let x = startPoint.x; x < startPoint.x + width; x += stepX) {
             if (initial || x !== startPoint.x || y !== startPoint.y) {
-              const primaryRay = this.camera.generateRayV2(x, y);
-              this.processingInfo.primaryRays++;
-              const color = this.castRay(primaryRay, this.scene.getObjects());
-
+              const color = this.getColor(x, y);
               const newWidth = Math.min(stepX, Math.abs(x + stepX - width));
               const newHeight = Math.min(stepY, Math.abs(y + stepY - hegiht));
-              screen.drawRectangle(x, y, newWidth, newHeight, color);
+              this.screen.drawRectangle(x, y, newWidth, newHeight, color);
 
               this.runTaskProgressive(
                 resolve,
-                reject,
-                screen,
                 { x, y },
                 newWidth,
                 newHeight
@@ -183,7 +175,7 @@ export class Renderer {
       });
     });
 
-    if (this.processingInfo.mode === 'depthMap') {
+    if (this.properties.resultMode === 'depthMap') {
       return this.getDephColor(closestIntersection);
     }
 
@@ -222,6 +214,12 @@ export class Renderer {
     return currentIntersectionColor;
   }
 
+  private getColor(x: number, y: number): Color {
+    const primaryRay = this.camera.generateRayV2(x, y);
+    this.processingInfo.primaryRays++;
+    return this.castRay(primaryRay, this.scene.getObjects());
+  }
+
   private getMixFogCoefficient(distance: number): number {
     if (distance < this.camera.fogStart) {
       return 0;
@@ -242,5 +240,9 @@ export class Renderer {
     } else {
       return colorTo;
     }
+  }
+
+  private getProcessingInfo(properties?: Partial<RenderProperties>): RendererProcessingInfo {
+    return new RendererProcessingInfo(this.resolution, this.canvasId, properties);
   }
 }
