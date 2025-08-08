@@ -57,13 +57,19 @@ export class Renderer {
 
     this.processingInfo = this.getProcessingInfo(properties);
     return new Promise((resolve) => {
-      if (this.properties.renderMode === 'progressive') {
+      if (this.processingInfo.pointToTrace) {
+        this.runDebugRender(
+          resolve,
+          this.processingInfo.pointToTrace.x,
+          this.processingInfo.pointToTrace.y,
+        );
+      } else if (this.properties.renderMode === 'progressive') {
         this.runTaskProgressive(
           resolve,
           { x: 0, y: 0 },
           this.resolution.width,
           this.resolution.height,
-          true
+          true,
         );
       } else {
         this.runTask(resolve, this.resolution, 0);
@@ -162,7 +168,32 @@ export class Renderer {
     });
   }
 
+  private runDebugRender(
+    resolve: (value: RenderSummary | PromiseLike<RenderSummary>) => void,
+    x: number,
+    y: number,
+  ): void {
+    const timestamp = performance.now();
+    const color = this.getColor(x, y);
+
+    // eslint-disable-next-line no-console
+    console.info('result color', color);
+    resolve({
+      time: performance.now() - timestamp,
+      primaryRays: this.processingInfo.primaryRays,
+      totalRays: this.processingInfo.totalRays,
+      transparentIntersections: this.processingInfo.transparentIntersections,
+      progress: 1,
+      status: 'success',
+    });
+  }
+
   private castRay(ray: Ray, objects: SceneObject[]): Color {
+
+    // eslint-disable-next-line no-console
+    if (this.processingInfo.pointToTrace) {
+      console.info('ray casted', ray);
+    }
     this.processingInfo.totalRays++;
     let closestIntersection: Intersection | undefined;
 
@@ -196,6 +227,19 @@ export class Renderer {
       this.scene.backgroundColor,
       this.getMixFogCoefficient(distanceToCamera)
     );
+
+    if (this.processingInfo.pointToTrace) {
+
+      // eslint-disable-next-line no-console
+      console.info(
+        `intersection with ${intersection.object.name} (${intersection.object.type})`,
+        {
+          distance: intersection.distance,
+          point: intersection.point,
+          currentIntersectionColor,
+        },
+      );
+    }
 
     const opacity = intersection.material.opacity;
     if (typeof opacity !== 'undefined' && opacity !== 1) {

@@ -21,12 +21,12 @@ export class RendererProcessingInfo {
     properties?: Partial<RenderProperties>,
   ) {
     this.totalPixels = resolution.width * resolution.height;
-    this.screen = new Screen(canvasId, resolution);
+    this.screen = new Screen(canvasId, resolution, 'black', !properties?.canvasPointToTrace);
     this.properties = this.getRenderProperties(properties);
     this.pointToTrace = this.getPointToTrace();
   }
 
-  public getRenderProperties(properties?: Partial<RenderProperties>): RenderProperties {
+  private getRenderProperties(properties?: Partial<RenderProperties>): RenderProperties {
     const canvasPointToTrace = properties?.canvasPointToTrace ?? null;
 
     if (canvasPointToTrace && (
@@ -45,7 +45,7 @@ export class RendererProcessingInfo {
     };
   }
 
-  public getPointToTrace(): Point | null {
+  private getPointToTrace(): Point | null {
     const point = this.properties.canvasPointToTrace;
     return point
       ? {

@@ -10,13 +10,20 @@ export class Screen {
   private readonly background: string;
   private readonly context: CanvasRenderingContext2D;
 
-  constructor(id: string, resolution: Resolution, background: string = 'black') {
+  constructor(
+    id: string,
+    resolution: Resolution,
+    background: string = 'black',
+    resetResolution = true,
+  ) {
     this.resolution = resolution;
     this.background = background;
     this.canvasEl = getElement(id);
 
-    this.canvasEl.width = resolution.width;
-    this.canvasEl.height = resolution.height;
+    if (resetResolution) {
+      this.canvasEl.width = resolution.width;
+      this.canvasEl.height = resolution.height;
+    }
     this.context = this.getContext(this.canvasEl);
   }
 

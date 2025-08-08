@@ -27,6 +27,7 @@ export class Ui {
     },
     renderButton: getElement<HTMLButtonElement>('button-render'),
 
+    canvas: getElement<HTMLCanvasElement>('canvas-main'),
     time: getElement<HTMLDivElement>('div-time'),
     interruptRenderButton: getElement<HTMLButtonElement>('button-interrupt'),
   };
@@ -103,6 +104,21 @@ export class Ui {
       if (event.target instanceof HTMLInputElement) {
         const newWidth = Math.round(Number(event.target.value) * this.aspectRatio);
         this.form.resolution.width.value = String(newWidth);
+      }
+    });
+
+    this.form.canvas.addEventListener('click', (event) => {
+      if (!this.form.renderButton.disabled && event.target instanceof HTMLCanvasElement) {
+        const rect = event.target.getBoundingClientRect();
+        const x = event.clientX - rect.left;
+        const y = event.clientY - rect.top;
+        this.renderer.render({
+          canvasPointToTrace: { x, y },
+        }).then((summary) => {
+
+          // eslint-disable-next-line no-console
+          console.info(summary);
+        });
       }
     });
 
